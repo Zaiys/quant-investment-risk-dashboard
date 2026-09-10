@@ -1,69 +1,75 @@
 import type { SectionKey } from "./types";
 export const sections: {
   key: SectionKey;
+  number: string;
   title: string;
-  short: string;
+  nav: string;
+  question: string;
   description: string;
-  inputs: string[];
 }[] = [
   {
     key: "market",
+    number: "02",
     title: "Market Explorer",
-    short: "Market exploration",
+    nav: "Market explorer",
+    question:
+      "How does the comparison change when history is put on a common basis?",
     description:
-      "Explore the investment universe and its historical market behaviour.",
-    inputs: [
-      "Asset universe and observation dates",
-      "Price or indexed performance series",
-      "Data coverage and source notes",
-    ],
+      "Historical performance, available observation periods and asset-by-asset comparisons.",
   },
   {
     key: "risk-return",
+    number: "03",
     title: "Risk vs Return",
-    short: "Risk & return",
+    nav: "Risk vs return",
+    question: "What risk accompanied the observed returns?",
     description:
-      "Compare return and risk estimates on the basis defined by the research.",
-    inputs: [
-      "Python-computed return and risk estimates",
-      "Comparison period and annualisation basis",
-      "Benchmark and risk-free-rate assumptions",
-    ],
+      "CAGR, annualised volatility, Sharpe ratio, maximum drawdown and beta, with their measurement assumptions.",
+  },
+  {
+    key: "correlation",
+    number: "04",
+    title: "Diversification & Correlation",
+    nav: "Diversification",
+    question: "Which relationships persist, and which depend on the period?",
+    description:
+      "Pairwise correlations, relationships with SPY and the distinction between co-movement and benchmark sensitivity.",
   },
   {
     key: "portfolio",
+    number: "05",
     title: "Portfolio Analysis",
-    short: "Portfolio analysis",
+    nav: "Portfolio",
+    question: "How does capital allocation translate into portfolio risk?",
     description:
-      "Understand portfolio composition, performance and sources of risk.",
-    inputs: [
-      "Reviewed portfolio weights",
-      "Portfolio performance and risk contributions",
-      "Weighting and rebalancing assumptions",
-    ],
+      "The hypothetical portfolio, its comparison with SPY and the contribution of each constituent to total risk.",
   },
   {
     key: "stress",
+    number: "06",
     title: "Stress Testing",
-    short: "Stress testing",
+    nav: "Stress testing",
+    question: "Did diversification behave differently across market regimes?",
     description:
-      "Examine how the portfolio behaves under the scenarios chosen in the analysis.",
-    inputs: [
-      "Research-defined scenarios and windows",
-      "Measured portfolio and asset outcomes",
-      "Scenario definitions and limitations",
-    ],
+      "Historical comparisons across the Global Financial Crisis, COVID crash and 2022 selloff.",
   },
   {
     key: "momentum",
-    title: "Momentum Strategy",
-    short: "Momentum strategy",
+    number: "07",
+    title: "Quantitative Strategy",
+    nav: "Strategy",
+    question:
+      "Can a clearly specified investment rule withstand a historical test?",
     description:
-      "A dedicated space for the strategy research and its future results.",
-    inputs: [
-      "Strategy definition and signal construction",
-      "Reviewed backtest and benchmark results",
-      "Implementation assumptions and limitations",
-    ],
+      "Momentum research is in progress. Strategy definitions and results will be published after the analysis is reviewed.",
   },
+];
+export const chapters = [
+  { href: "/", number: "01", label: "Overview" },
+  ...sections.map((s) => ({
+    href: `/${s.key}`,
+    number: s.number,
+    label: s.nav,
+  })),
+  { href: "/methodology", number: "08", label: "Methodology" },
 ];

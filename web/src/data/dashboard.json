@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "generatedAt": null,
   "sections": {
     "market": {
@@ -21,6 +21,19 @@
     "momentum": {
       "status": "awaiting",
       "reason": "Awaiting results from notebooks/02_momentum_strategy.ipynb. Strategy research is in progress."
+    },
+    "correlation": {
+      "status": "awaiting",
+      "reason": "The correlation matrix, SPY comparisons and period-specific observations have not been exported."
     }
+  },
+  "research": {
+    "updatedAt": null,
+    "period": null,
+    "universe": []
+  },
+  "methodology": {
+    "status": "awaiting",
+    "reason": "The repository methodology document is empty. The assumptions below remain to be verified against the Python research."
   }
 }

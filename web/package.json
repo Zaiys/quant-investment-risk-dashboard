@@ -1,6 +1,6 @@
 {
   "name": "quant-investment-risk-dashboard",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
   "engines": {
     "node": ">=22.13.0"
@@ -18,7 +18,6 @@
   },
   "dependencies": {
     "@fontsource/dm-sans": "5.3.0",
-    "@fontsource/manrope": "5.3.0",
     "ajv": "8.20.0",
     "ajv-formats": "3.0.1",
     "lucide-react": "1.44.0",

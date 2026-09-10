@@ -1,72 +1,56 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  Activity,
-  ArrowUpRight,
-  ChartNoAxesCombined,
-  Compass,
-  FlaskConical,
-  Layers,
-  LayoutDashboard,
-  ShieldCheck,
-} from "lucide-react";
-import { sections } from "@/lib/sections";
-const icons = [Compass, ChartNoAxesCombined, Layers, ShieldCheck, Activity];
+import { useState } from "react";
+import { chapters } from "@/lib/sections";
 export function Navigation() {
   const pathname = usePathname();
+  const [open, setOpen] = useState(false);
   return (
-    <aside className="sidebar">
-      <Link href="/" className="brand" aria-label="Quant Research overview">
-        <span className="brand-symbol">
-          <ChartNoAxesCombined size={23} />
-        </span>
-        <span>
-          QUANT<span className="brand-sub">RESEARCH / RISK</span>
-        </span>
-      </Link>
-      <div className="sidebar-label">RESEARCH WORKSPACE</div>
-      <nav aria-label="Main navigation">
-        <Link
-          href="/"
-          className={`nav-link ${pathname === "/" ? "active" : ""}`}
-          aria-current={pathname === "/" ? "page" : undefined}
-        >
-          <LayoutDashboard size={18} />
-          <span>Overview</span>
+    <header className="site-header">
+      <div className="masthead">
+        <Link href="/" className="wordmark">
+          Investment research
+          <span>Quantitative Investment & Risk Analysis</span>
         </Link>
-        {sections.map((section, index) => {
-          const Icon = icons[index];
-          const active = pathname === `/${section.key}`;
-          return (
-            <Link
-              href={`/${section.key}`}
-              key={section.key}
-              className={`nav-link ${active ? "active" : ""}`}
-              aria-current={active ? "page" : undefined}
-            >
-              <Icon size={18} />
-              <span>{section.title}</span>
-              {section.key === "momentum" && (
-                <span className="nav-tag">SOON</span>
-              )}
-            </Link>
-          );
-        })}
-      </nav>
-      <div className="sidebar-bottom">
-        <FlaskConical size={20} />
-        <strong>Research, with context.</strong>
-        <p>Trace every result to its underlying analysis.</p>
         <a
+          className="repository-link"
           href="https://github.com/Zaiys/quant-investment-risk-dashboard"
           target="_blank"
           rel="noreferrer"
         >
-          Project repository <ArrowUpRight size={15} />
+          Source repository <span aria-hidden="true">↗</span>
         </a>
       </div>
-      <div className="sidebar-footer">QUANTITATIVE INVESTMENT RESEARCH</div>
-    </aside>
+      <div className="contents-bar">
+        <span className="meta-label">Research contents</span>
+        <button
+          className="contents-toggle"
+          aria-expanded={open}
+          aria-controls="research-navigation"
+          onClick={() => setOpen(!open)}
+        >
+          {open ? "Close contents" : "Browse chapters"}{" "}
+          <span aria-hidden="true">{open ? "−" : "+"}</span>
+        </button>
+      </div>
+      <nav
+        id="research-navigation"
+        aria-label="Research chapters"
+        className={`chapter-nav ${open ? "is-open" : ""}`}
+      >
+        {chapters.map((chapter) => (
+          <Link
+            key={chapter.href}
+            href={chapter.href}
+            aria-current={pathname === chapter.href ? "page" : undefined}
+            onClick={() => setOpen(false)}
+          >
+            <span className="chapter-number">{chapter.number}</span>
+            <span>{chapter.label}</span>
+          </Link>
+        ))}
+      </nav>
+    </header>
   );
 }

@@ -1,13 +1,13 @@
 import Link from "next/link";
 export default function NotFound() {
   return (
-    <div className="empty-panel">
-      <div className="eyebrow">404 / PAGE NOT FOUND</div>
-      <h1>This view doesn’t exist.</h1>
-      <p>Return to the research overview to find an analysis section.</p>
-      <Link className="primary-link" href="/">
-        Back to overview
+    <section className="not-found">
+      <span className="meta-label">404 / Research index</span>
+      <h1>This chapter is not available.</h1>
+      <p>Use the contents to return to the study.</p>
+      <Link href="/" className="text-link">
+        Research overview →
       </Link>
-    </div>
+    </section>
   );
 }

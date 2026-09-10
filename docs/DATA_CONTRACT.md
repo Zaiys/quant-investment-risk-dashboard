@@ -10,15 +10,23 @@ The canonical contract is `web/src/data/dashboard.schema.json` (JSON Schema draf
 
 A snapshot contains:
 
-- `schemaVersion`: exactly `1`.
+- `schemaVersion`: exactly `2`.
 - `generatedAt`: ISO 8601 timestamp including a time zone, or `null` before the first export. Available results require a timestamp.
-- `sections`: exactly `market`, `risk-return`, `portfolio`, `stress`, and `momentum`.
+- `sections`: exactly `market`, `risk-return`, `correlation`, `portfolio`, `stress`, and `momentum`.
 
 A missing section has `status: "awaiting"` and a plain-language `reason`. It has no metric, chart or table arrays. Missing is never represented as a zero result.
 
-An available section has `status: "available"`, `source`, `metrics`, `charts`, and `tables`. At least one of the three widget arrays must be nonempty. Widget IDs must be unique within the section.
+An available section has `status: "available"`, `source`, `metrics`, `charts`, and `tables`. It may also contain `matrices`. At least one widget array must be nonempty. Widget IDs must be unique within the section.
 
-Momentum accepts only the awaiting shape in version 1. The Python helper also rejects momentum as an input section. This is an intentional UI-only boundary until the separate research is reviewed.
+Momentum accepts only the awaiting shape in version 2. The Python helper also rejects momentum as an input section. This is an intentional UI-only boundary until the separate research is reviewed.
+
+## Research record and methodology
+
+The root also requires `research` and `methodology`.
+
+`research` contains `updatedAt` (research update date in `YYYY-MM-DD`, or null), `period` (`{start, end}` or null), and `universe` (an array of `{id, name, availableFrom, availableTo}`). Asset IDs must be unique and date intervals must be ordered. Use an empty array when the universe has not been exported. These fields populate the overview and available-history register. They are supplied explicitly: the app never treats export time as research time or infers a common observation period from asset histories.
+
+`methodology` is either `{status: "awaiting", reason}` or `{status: "available", source, items}`. Available items are `{id, title, detail}`, with unique IDs and a full source object. Available methodology requires `generatedAt`. Only this supplied text is labelled documented. The website's separate review checklist is labelled unverified and does not assert that its subjects were implemented.
 
 ## Source context
 
@@ -33,7 +41,7 @@ Every available section requires:
 | `methodology`                | Supplied formulas/assumptions context or a readable reference description          |
 | `notes`                      | Array of limitations or explanatory notes; may be empty                            |
 
-The period must be ordered and cannot end after `asOf`. These fields are author-supplied provenance; validation does not establish that the source file exists or that the analysis is correct. Record asset-specific coverage in a table when periods differ. Export common-period comparisons only when the Python analysis has explicitly computed them.
+The period must be ordered and cannot end after `asOf`. These fields are author-supplied provenance; validation does not establish that the source file exists or that the analysis is correct. Record asset-specific coverage in `research.universe` and, when needed, a more detailed table. Export common-period comparisons only when the Python analysis has explicitly computed them.
 
 ## Units and missing data
 
@@ -45,7 +53,7 @@ Dates in textual chart axes are displayed as supplied. Use ISO date strings wher
 
 ## Metrics
 
-Each metric requires `id`, `label`, `value` (finite number or null), `unit` (`number`, `percent`, `ratio`), and `note`.
+Each metric requires `id`, `label`, `value` (finite number or null), `unit` (`number`, `percent`, `ratio`), and `note`. Optional `entityId` and `scenarioId` associate it with inspection controls.
 
 Use the research's precise label and units. State annualisation basis, period, benchmark or risk-free-rate assumptions where relevant. The UI makes no assumption that a metric is CAGR, arithmetic return, volatility or Sharpe ratio.
 
@@ -76,6 +84,23 @@ Each table requires `id`, `title`, `description`, `columns` and `rows`.
 
 Column headers sort values for viewing. Numeric values are sorted numerically, and nulls remain last in both directions. Sorting never modifies the snapshot.
 
+## Inspection controls
+
+Available sections may include:
+
+- `entities`: nonempty array of `{id, label}` with unique IDs.
+- `scenarios`: nonempty array of `{id, label, period: {start, end}, notes}` with unique IDs and ordered dates.
+
+Optional `entityId` can tag metrics, chart series and table rows. Optional `scenarioId` can tag metrics, charts and tables. References must resolve to the section's declared IDs. Export distinct scenario-specific charts in Python; the browser does not crop a full-period series and recompute its statistics.
+
+Selectors retain matching records and untagged comparison outputs. A visible note explains that untagged outputs retain their original period. Do not leave an output untagged if that would make it misleading across selections. Selection never mutates source values. Each chart also permits inspection of one supplied series.
+
+## Correlation matrices
+
+An available section may supply `matrices`, each with `id`, `title`, `description`, `labels` and `values`. Labels are a nonempty array of `{id, label}` with unique IDs. Values form a square matrix in label order; each cell is a finite number from -1 to 1 or null. Include the observation window and estimation basis in the section's source context. The presentation verifies shape and bounds, not the estimator, symmetry or financial validity.
+
+The semantic table displays exact supplied values, with restrained contrast bands as a visual aid. Column buttons select an asset and display its relationships. No correlations, beta estimates, rankings or diversifier conclusions are computed in the browser. Matrices retain their supplied comparison context when other outputs are filtered.
+
 ## Python integration
 
 Run an export adapter from the repository root or add the repository root to your Python import path. Use values and metadata that already exist in the reviewed analysis:
@@ -88,12 +113,15 @@ from scripts.export_dashboard import write_dashboard
 write_dashboard({
     "market": market_section,
     "risk-return": risk_return_section,
+    "correlation": correlation_section,
     "portfolio": portfolio_section,
     "stress": stress_section,
-})
+}, research=research_metadata, methodology=methodology_document)
 ```
 
 The variables above are integration interfaces, not implemented research or invented results. `write_dashboard` serializes ordinary Python dictionaries/lists/scalars. Convert pandas/NumPy containers to their Python equivalents in the adapter; explicitly map missing observations to `None`. Do not infer financial units during that conversion.
+
+The metadata variables are explicit reviewed dictionaries with the shapes above. Omitting either keyword argument publishes unknown research metadata or awaiting methodology, respectively.
 
 You may omit unavailable sections. The helper always writes a complete snapshot, so pass all sections you want to retain. It adds a current UTC export timestamp and fixes momentum to awaiting. It does not overwrite notebooks, and output targets must use `.json`.
 
@@ -105,6 +133,10 @@ Alternatively, produce a complete JSON snapshot using your own adapter, then run
 ```
 
 The second command validates before atomically replacing the app snapshot. It preserves the supplied export timestamp. The Next.js build validates again, then prerenders the pages. Publication requires committing the JSON and rebuilding or redeploying.
+
+## Version 2 migration
+
+Version 2 adds the correlation section, research record and methodology publication. A version 1 snapshot fails validation. Re-export through `write_dashboard` with the reviewed section values and explicit metadata, or add the new root fields and awaiting correlation section to a complete snapshot before validating. Do not populate missing dates, universe members, assumptions or results by inference. The repository had no published analysis values when version 2 was introduced.
 
 ## Evolution
 

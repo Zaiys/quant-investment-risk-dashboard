@@ -1,4 +1,4 @@
-# Quantitative Investment & Risk Dashboard
+# Quantitative Investment & Risk Analysis
 
 A research presentation layer for exploring markets, comparing risk and return, examining portfolios, and reviewing stress scenarios. Python analysis supplies the results; the web application presents them with their sources and assumptions.
 
@@ -10,20 +10,24 @@ The repository currently has no published analysis outputs. At implementation, `
 
 The application deliberately shows **Awaiting data** until reviewed Python outputs are exported. Synthetic numbers exist only in automated test fixtures; the production dashboard contains no sample performance data.
 
-`notebooks/02_momentum_strategy.ipynb` is reserved for separately authored research. The dashboard does not create or modify that notebook. Its momentum page is UI-only, and version 1 of the export contract rejects momentum results.
+`notebooks/02_momentum_strategy.ipynb` is reserved for separately authored research. The dashboard does not create or modify that notebook. Its momentum page is UI-only, and version 2 of the export contract rejects momentum results.
 
 ## Application
 
-| View               | Presentation                                                    |
-| ------------------ | --------------------------------------------------------------- |
-| Overview           | Project context, export coverage and navigation                 |
-| Market Explorer    | Exported market metrics, price/index series and coverage tables |
-| Risk vs Return     | Exported comparison metrics, scatter plots and result tables    |
-| Portfolio Analysis | Exported portfolio metrics, composition and risk contributions  |
-| Stress Testing     | Exported scenario outcomes and comparisons                      |
-| Momentum Strategy  | Explicit waiting state for the separate momentum notebook       |
+| Chapter                          | Presentation                                                                |
+| -------------------------------- | --------------------------------------------------------------------------- |
+| 01 Overview                      | Research questions, asset universe, date coverage and publication record    |
+| 02 Market Explorer               | Indexed performance, asset inspection and available-history dates           |
+| 03 Risk vs Return                | Metric definitions, asset inspection and exported risk-return scatter plots |
+| 04 Diversification & Correlation | Interactive correlation matrices and period-specific relationships          |
+| 05 Portfolio Analysis            | Portfolio/SPY comparisons, weights and component risk contributions         |
+| 06 Stress Testing                | Historical scenario selection and exported portfolio/asset comparisons      |
+| 07 Quantitative Strategy         | Analysis-in-progress interface for the separate momentum notebook           |
+| 08 Methodology & Limitations     | Published assumptions and an explicitly unverified review checklist         |
 
-The four analysis views use reusable metric, line/bar/scatter chart and sortable table components. Each available section shows source, observation period, data date, methodology and notes. Chart values remain accessible as tables; missing observations remain missing.
+The presentation uses paper tones, ink-like text, restrained green accents and editorial typography. Each chapter has its own research question and layout. The methodology chapter distinguishes documented assumptions from questions that still need checking. Global Financial Crisis, COVID crash and 2022 selloff appear as requested study topics; no windows or outcomes are assumed.
+
+Available outputs use metric strips, line/bar/scatter charts, correlation matrices and sortable tables. Optional entity and scenario selectors inspect supplied records; they do not recalculate values. Every available section shows source, observation period, data date, methodology and notes. Chart values remain accessible as tables; missing observations remain missing. Raw share prices are explicitly distinguished from comparable indexed performance.
 
 ## Run locally
 
@@ -47,7 +51,7 @@ npm run build
 npm run start
 ```
 
-With the production server running, use `npm run smoke` in a second terminal inside `web/` to verify all six routes, the snapshot download and the 404 response.
+With the production server running, use `npm run smoke` in a second terminal inside `web/` to verify all eight chapter routes, the snapshot download and the 404 response.
 
 ## Architecture
 
@@ -69,10 +73,11 @@ web/
 tests/                         Python exporter tests
 docs/DATA_CONTRACT.md           Data shapes and Python integration instructions
 docs/DEPLOYMENT.md              Vercel preview and production instructions
+docs/DESIGN.md                  Research-specific design system and accessibility rules
 .github/workflows/dashboard.yml  Automated validation on pushes and pull requests
 ```
 
-`src/` is a future integration location; no finance modules have been fabricated. Next.js statically prerenders all six views from the validated JSON snapshot. The `/export` route downloads the same snapshot. No database, login, live data service, trading execution or background calculation is required.
+`src/` is a future integration location; no finance modules have been fabricated. Next.js statically prerenders all eight chapters from the validated JSON snapshot. The `/export` route downloads the same snapshot. No database, login, live data service, trading execution or background calculation is required.
 
 The browser formats numbers and arranges chart coordinates; it does not calculate returns, annualise volatility, estimate Sharpe ratios, construct weights, rebalance portfolios or simulate strategies. Those decisions belong to the Python research.
 
@@ -92,7 +97,7 @@ Once an analysis produces a complete snapshot following [the data contract](docs
 .venv-dashboard/bin/python scripts/export_dashboard.py --input path/to/reviewed-dashboard.json
 ```
 
-Or call `write_dashboard(sections)` from a Python export adapter. It validates the already-computed outputs, records the export time, and atomically writes `web/src/data/dashboard.json`. Invalid exports do not replace the previous snapshot. The helper publishes a complete snapshot: include all sections to retain, because omitted sections are marked awaiting.
+Or call `write_dashboard(sections, research=research_metadata, methodology=methodology_document)` from a Python export adapter. It validates the already-computed outputs, records the export time separately from the supplied research update date, and atomically writes `web/src/data/dashboard.json`. Invalid exports do not replace the previous snapshot. The helper publishes a complete snapshot: include all sections to retain, because omitted sections are marked awaiting.
 
 Commit the reviewed snapshot and rebuild/redeploy to update the public app. There is no live connection to a running notebook. Do not commit sensitive information or raw datasets in this presentation snapshot; its contents are available to dashboard visitors.
 
@@ -110,7 +115,7 @@ npm run build
 npm run typecheck
 ```
 
-Tests cover validation, source metadata, missing/non-finite values, dates, chart coordinate alignment, sorting, accessible chart values, atomic publication and the momentum guard. Test fixtures are explicitly synthetic and never imported by the application. ESLint 9 is pinned because the current Next.js React lint rules are incompatible with ESLint 10.
+Tests cover validation, source metadata, missing/non-finite values, dates, chart coordinate alignment, sorting, asset/scenario selection, correlation matrices, accessible chart values, atomic publication and the momentum guard. Test fixtures are explicitly synthetic and never imported by the application. ESLint 9 is pinned because the current Next.js React lint rules are incompatible with ESLint 10.
 
 For an isolated visual test of populated components, run `npm run test:preview` in `web/` and open the printed local URL. The page is labelled as synthetic test data and does not change the production snapshot.
 
@@ -136,3 +141,5 @@ For a Git-connected project imported from the repository root, set **Root Direct
 The dashboard validates presentation structure, not financial correctness. A successful build does not verify investment methodology, data quality, statistical validity, or whether observation periods are comparable. Supply those definitions and limitations with each export.
 
 Momentum integration remains a separate change after the notebook and outputs are reviewed. It will require deliberately extending the contract and replacing the UI-only state; no strategy settings or performance results have been preselected.
+
+Version 2 adds explicit research metadata, methodology publication, correlation matrices and optional inspection controls. Version 1 snapshots must be re-exported with the new structure; no values or assumptions are inferred during migration.

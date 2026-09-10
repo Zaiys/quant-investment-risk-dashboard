@@ -1,10 +1,10 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Research dashboard export v1",
+  "title": "Quantitative investment research export v2",
   "type": "object",
   "properties": {
     "schemaVersion": {
-      "const": 1
+      "const": 2
     },
     "generatedAt": {
       "type": ["string", "null"],
@@ -38,13 +38,150 @@
           },
           "required": ["status", "reason"],
           "additionalProperties": false
+        },
+        "correlation": {
+          "$ref": "#/definitions/section"
         }
       },
-      "required": ["market", "risk-return", "portfolio", "stress", "momentum"],
+      "required": [
+        "market",
+        "risk-return",
+        "portfolio",
+        "stress",
+        "momentum",
+        "correlation"
+      ],
       "additionalProperties": false
+    },
+    "research": {
+      "type": "object",
+      "properties": {
+        "updatedAt": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "period": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "start": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "end": {
+                  "type": "string",
+                  "format": "date"
+                }
+              },
+              "required": ["start", "end"],
+              "additionalProperties": false
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "universe": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "availableFrom": {
+                "type": "string",
+                "format": "date"
+              },
+              "availableTo": {
+                "type": "string",
+                "format": "date"
+              }
+            },
+            "required": ["id", "name", "availableFrom", "availableTo"],
+            "additionalProperties": false
+          },
+          "minItems": 0
+        }
+      },
+      "required": ["updatedAt", "period", "universe"],
+      "additionalProperties": false
+    },
+    "methodology": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "awaiting"
+            },
+            "reason": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": ["status", "reason"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "available"
+            },
+            "source": {
+              "$ref": "#/definitions/source"
+            },
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "title": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "detail": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": ["id", "title", "detail"],
+                "additionalProperties": false
+              },
+              "minItems": 1
+            }
+          },
+          "required": ["status", "source", "items"],
+          "additionalProperties": false
+        }
+      ]
     }
   },
-  "required": ["schemaVersion", "generatedAt", "sections"],
+  "required": [
+    "schemaVersion",
+    "generatedAt",
+    "sections",
+    "research",
+    "methodology"
+  ],
   "additionalProperties": false,
   "definitions": {
     "section": {
@@ -70,57 +207,7 @@
               "const": "available"
             },
             "source": {
-              "type": "object",
-              "properties": {
-                "path": {
-                  "type": "string",
-                  "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$"
-                },
-                "label": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "asOf": {
-                  "type": "string",
-                  "format": "date"
-                },
-                "period": {
-                  "type": "object",
-                  "properties": {
-                    "start": {
-                      "type": "string",
-                      "format": "date"
-                    },
-                    "end": {
-                      "type": "string",
-                      "format": "date"
-                    }
-                  },
-                  "required": ["start", "end"],
-                  "additionalProperties": false
-                },
-                "methodology": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "notes": {
-                  "type": "array",
-                  "items": {
-                    "type": "string",
-                    "minLength": 1
-                  },
-                  "minItems": 0
-                }
-              },
-              "required": [
-                "path",
-                "label",
-                "asOf",
-                "period",
-                "methodology",
-                "notes"
-              ],
-              "additionalProperties": false
+              "$ref": "#/definitions/source"
             },
             "metrics": {
               "type": "array",
@@ -142,6 +229,14 @@
                     "enum": ["number", "percent", "ratio"]
                   },
                   "note": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "entityId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "scenarioId": {
                     "type": "string",
                     "minLength": 1
                   }
@@ -214,12 +309,20 @@
                             "additionalProperties": false
                           },
                           "minItems": 1
+                        },
+                        "entityId": {
+                          "type": "string",
+                          "minLength": 1
                         }
                       },
                       "required": ["id", "label", "points"],
                       "additionalProperties": false
                     },
                     "minItems": 1
+                  },
+                  "scenarioId": {
+                    "type": "string",
+                    "minLength": 1
                   }
                 },
                 "required": [
@@ -291,15 +394,135 @@
                             "type": ["string", "number", "null"]
                           },
                           "minItems": 1
+                        },
+                        "entityId": {
+                          "type": "string",
+                          "minLength": 1
                         }
                       },
                       "required": ["id", "cells"],
                       "additionalProperties": false
                     },
                     "minItems": 1
+                  },
+                  "scenarioId": {
+                    "type": "string",
+                    "minLength": 1
                   }
                 },
                 "required": ["id", "title", "description", "columns", "rows"],
+                "additionalProperties": false
+              },
+              "minItems": 0
+            },
+            "entities": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "label": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": ["id", "label"],
+                "additionalProperties": false
+              },
+              "minItems": 1
+            },
+            "scenarios": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "label": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "period": {
+                    "type": "object",
+                    "properties": {
+                      "start": {
+                        "type": "string",
+                        "format": "date"
+                      },
+                      "end": {
+                        "type": "string",
+                        "format": "date"
+                      }
+                    },
+                    "required": ["start", "end"],
+                    "additionalProperties": false
+                  },
+                  "notes": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": ["id", "label", "period", "notes"],
+                "additionalProperties": false
+              },
+              "minItems": 1
+            },
+            "matrices": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "title": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "description": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "labels": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "label": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": ["id", "label"],
+                      "additionalProperties": false
+                    },
+                    "minItems": 1
+                  },
+                  "values": {
+                    "type": "array",
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": ["number", "null"],
+                        "minimum": -1,
+                        "maximum": 1
+                      },
+                      "minItems": 1
+                    },
+                    "minItems": 1
+                  }
+                },
+                "required": ["id", "title", "description", "labels", "values"],
                 "additionalProperties": false
               },
               "minItems": 0
@@ -331,10 +554,65 @@
                   "type": "array"
                 }
               }
+            },
+            {
+              "required": ["matrices"],
+              "properties": {
+                "matrices": {
+                  "type": "array",
+                  "minItems": 1
+                }
+              }
             }
           ]
         }
       ]
+    },
+    "source": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "asOf": {
+          "type": "string",
+          "format": "date"
+        },
+        "period": {
+          "type": "object",
+          "properties": {
+            "start": {
+              "type": "string",
+              "format": "date"
+            },
+            "end": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          "required": ["start", "end"],
+          "additionalProperties": false
+        },
+        "methodology": {
+          "type": "string",
+          "minLength": 1
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0
+        }
+      },
+      "required": ["path", "label", "asOf", "period", "methodology", "notes"],
+      "additionalProperties": false
     }
   }
 }

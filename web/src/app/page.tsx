@@ -1,141 +1,184 @@
 import Link from "next/link";
-import {
-  ArrowRight,
-  ArrowUpRight,
-  BookOpen,
-  Check,
-  Database,
-  FileText,
-  Layers,
-} from "lucide-react";
 import { dashboard } from "@/lib/data";
 import { sections } from "@/lib/sections";
 import { formatDate } from "@/lib/format";
-import { Status } from "@/components/ui";
 export default function Overview() {
-  const available = sections.filter(
-    (section) => dashboard.sections[section.key].status === "available",
-  ).length;
+  const { research, methodology } = dashboard;
   return (
     <>
-      <div className="overview-heading">
-        <div className="eyebrow">PROJECT OVERVIEW</div>
-        <span className="edition">01 — RESEARCH WORKSPACE</span>
-      </div>
-      <section className="overview-hero">
-        <div className="hero-copy">
+      <section className="cover grid-12">
+        <div className="cover-main">
+          <div className="meta-label cover-kicker">
+            01 / Overview <span>Self-directed research project</span>
+          </div>
           <h1>
-            Investment & risk.
+            Quantitative
             <br />
-            <span>In perspective.</span>
+            Investment <span className="ampersand">&</span>
+            <br />
+            Risk Analysis<span className="title-stop">.</span>
           </h1>
-          <p>
-            A connected view of markets, portfolio behaviour and investment
-            risk. Grounded in the underlying Python research.
+          <p className="cover-deck">
+            An investigation of historical asset performance, the risks behind
+            returns, and the behaviour of a hypothetical portfolio across market
+            regimes.
           </p>
-          <Link href="/market" className="primary-link">
-            Explore the research <ArrowRight size={17} />
+        </div>
+        <aside className="research-record">
+          <span className="meta-label">Research record</span>
+          <h2>
+            Source &<br />
+            publication status.
+          </h2>
+          <p>
+            The study brings together market history, risk measures,
+            diversification and portfolio construction. Each comparison depends
+            on its data window and assumptions.
+          </p>
+          <dl>
+            <div>
+              <dt>Primary analysis</dt>
+              <dd>
+                <code>01_market_exploration.ipynb</code>
+              </dd>
+            </div>
+            <div>
+              <dt>Strategy research</dt>
+              <dd>Momentum · in progress</dd>
+            </div>
+            <div>
+              <dt>Research last updated</dt>
+              <dd>
+                {research.updatedAt
+                  ? formatDate(research.updatedAt)
+                  : "Not recorded in an export"}
+              </dd>
+            </div>
+          </dl>
+          <Link href="/methodology" className="text-link">
+            Methodology & limitations <span aria-hidden="true">→</span>
           </Link>
+        </aside>
+      </section>
+      <dl className="study-metadata">
+        <div>
+          <dt>Asset universe</dt>
+          <dd>
+            {research.universe.length
+              ? research.universe.map((a) => a.id).join(" · ")
+              : "Not yet exported"}
+          </dd>
         </div>
-        <div className="snapshot">
-          <div className="snapshot-heading">
-            <Layers size={20} />
-            <span>RESEARCH SNAPSHOT</span>
-          </div>
-          <strong>
-            {available}
-            <span>/ 4</span>
-          </strong>
-          <h2>analysis sections available</h2>
-          <p>
-            {available === 0
-              ? "The presentation is ready. Reviewed analysis exports are the next step."
-              : "Published research outputs, with their source and assumptions attached."}
-          </p>
-          <div className="coverage-bars" aria-hidden="true">
-            {[0, 1, 2, 3].map((index) => (
-              <span className={index < available ? "filled" : ""} key={index} />
-            ))}
-          </div>
-          <div className="snapshot-footer">
+        <div>
+          <dt>Analysis period</dt>
+          <dd>
+            {research.period
+              ? `${formatDate(research.period.start)} to ${formatDate(research.period.end)}`
+              : "Not yet verified"}
+          </dd>
+        </div>
+        <div>
+          <dt>Methodology status</dt>
+          <dd>
+            {methodology.status === "available"
+              ? "Documented in export"
+              : "Awaiting source verification"}
+          </dd>
+        </div>
+        <div>
+          <dt>Latest data export</dt>
+          <dd>
             {dashboard.generatedAt
-              ? `Last export · ${formatDate(dashboard.generatedAt)}`
-              : "No analysis exported yet"}
+              ? formatDate(dashboard.generatedAt)
+              : "No research export"}
+          </dd>
+        </div>
+      </dl>
+      {dashboard.generatedAt === null && (
+        <aside className="publication-note">
+          <span className="meta-label">Publication note</span>
+          <p>
+            The local market notebook and methodology document are currently
+            empty. No financial results are presented until the underlying
+            analysis is available and its outputs are verified.
+          </p>
+        </aside>
+      )}
+      <section className="overview-study grid-12">
+        <div className="research-questions">
+          <div className="section-line">
+            <span className="meta-label">Scope of inquiry</span>
+            <h2>
+              Three questions
+              <br />
+              guide the study.
+            </h2>
           </div>
+          <ol>
+            <li>
+              <h3>What lies behind an asset’s return?</h3>
+              <p>
+                Examine growth alongside volatility, drawdown and benchmark
+                sensitivity, accounting for differences in available history.
+              </p>
+            </li>
+            <li>
+              <h3>What does diversification change?</h3>
+              <p>
+                Compare capital weights with risk contributions and examine the
+                portfolio relative to SPY on a documented basis.
+              </p>
+            </li>
+            <li>
+              <h3>How much depends on the regime?</h3>
+              <p>
+                Compare historical stress periods and investigate a quantitative
+                strategy under explicit assumptions.
+              </p>
+            </li>
+          </ol>
         </div>
-      </section>
-      <section className="context-strip" aria-label="Project principles">
-        <div>
-          <BookOpen size={19} />
-          <span>
-            <strong>Research led</strong> Python is the source of truth
-          </span>
-        </div>
-        <div>
-          <FileText size={19} />
-          <span>
-            <strong>Traceable results</strong> Sources & assumptions included
-          </span>
-        </div>
-        <div>
-          <Database size={19} />
-          <span>
-            <strong>Snapshot data</strong> No live market feed
-          </span>
-        </div>
-      </section>
-      <section id="research-status" className="research-section">
-        <div className="section-heading">
-          <div>
-            <div className="eyebrow">THE RESEARCH</div>
-            <h2>From markets to decisions</h2>
+        <div className="research-index">
+          <div className="section-line">
+            <span className="meta-label">Navigate the analysis</span>
+            <h2>Research chapters</h2>
           </div>
-          <span className="section-meta">Five connected perspectives</span>
-        </div>
-        <div className="research-list">
-          {sections.map((section, index) => (
+          {sections.map((section) => (
             <Link
-              className="research-row"
               href={`/${section.key}`}
+              className="index-entry"
               key={section.key}
             >
-              <span className="row-number">0{index + 1}</span>
-              <div className="row-copy">
-                <h3>
-                  {section.title}
-                  {section.key === "momentum" && (
-                    <span className="small-tag">IN DEVELOPMENT</span>
-                  )}
-                </h3>
+              <span className="index-number">{section.number}</span>
+              <div>
+                <h3>{section.title}</h3>
                 <p>{section.description}</p>
+                <span className="index-status">
+                  {dashboard.sections[section.key].status === "available"
+                    ? "Analysis exported"
+                    : section.key === "momentum"
+                      ? "Analysis in progress"
+                      : "Awaiting research export"}
+                </span>
               </div>
-              <Status section={dashboard.sections[section.key]} />
-              <ArrowUpRight className="row-arrow" size={21} />
+              <span className="index-arrow" aria-hidden="true">
+                ↗
+              </span>
             </Link>
           ))}
-        </div>
-      </section>
-      <section className="overview-bottom">
-        <div className="note-block">
-          <div className="eyebrow">READING THIS DASHBOARD</div>
-          <h2>Every number needs context.</h2>
-          <p>
-            Each published analysis carries its observation period, source and
-            methodology. Missing outputs stay clearly marked until the research
-            is ready.
-          </p>
-        </div>
-        <div className="checklist">
-          <h3>Publication standard</h3>
-          <p>
-            <Check size={16} /> Values supplied by the Python analysis
-          </p>
-          <p>
-            <Check size={16} /> No simulated results in the dashboard
-          </p>
-          <p>
-            <Check size={16} /> Momentum research published separately
-          </p>
+          <Link href="/methodology" className="index-entry">
+            <span className="index-number">08</span>
+            <div>
+              <h3>Methodology & Limitations</h3>
+              <p>
+                Data definitions, comparison windows, assumptions and the
+                boundaries of the evidence.
+              </p>
+            </div>
+            <span className="index-arrow" aria-hidden="true">
+              ↗
+            </span>
+          </Link>
         </div>
       </section>
     </>

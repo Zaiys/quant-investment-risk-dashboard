@@ -6,39 +6,33 @@ import "@fontsource/dm-sans/400.css";
 import "@fontsource/dm-sans/500.css";
 import "@fontsource/dm-sans/600.css";
 import "@fontsource/dm-sans/700.css";
-import "@fontsource/manrope/400.css";
-import "@fontsource/manrope/500.css";
-import "@fontsource/manrope/600.css";
-import "@fontsource/manrope/700.css";
 import "./globals.css";
 export const metadata: Metadata = {
   title: {
-    default: "Overview | Quant Research",
-    template: "%s | Quant Research",
+    default: "Quantitative Investment & Risk Analysis",
+    template: "%s | Quantitative Investment & Risk Analysis",
   },
   description:
-    "A transparent presentation of quantitative investment research, market exploration and portfolio risk analysis.",
+    "A self-directed quantitative finance research project investigating historical asset performance, portfolio risk, diversification and investment strategies.",
+  openGraph: {
+    type: "website",
+    title: "Quantitative Investment & Risk Analysis",
+    description:
+      "Historical asset performance, portfolio risk and diversification. Research, methodology and limitations.",
+  },
 };
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" data-scroll-behavior="smooth">
+    <html lang="en">
       <body>
         <a className="skip-link" href="#main-content">
-          Skip to content
+          Skip to research
         </a>
         <Navigation />
-        <div className="workspace">
-          <div className="topbar">
-            <span>INVESTMENT RESEARCH</span>
-            <span className="topbar-right">
-              Research dashboard <span className="topbar-slash">/</span> v1.0
-            </span>
-          </div>
-          <main id="main-content" tabIndex={-1}>
-            {children}
-          </main>
-          <PageFooter />
-        </div>
+        <main id="main-content" tabIndex={-1}>
+          {children}
+        </main>
+        <PageFooter />
       </body>
     </html>
   );

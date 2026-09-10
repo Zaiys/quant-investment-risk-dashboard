@@ -1,12 +1,13 @@
+import Link from "next/link";
 import type { ReactNode } from "react";
-import { ArrowUpRight, Database, FileCheck2 } from "lucide-react";
-import type { AvailableSection, Metric, Section } from "@/lib/types";
+import type { Source, Metric, Section } from "@/lib/types";
 import { formatDate, formatValue } from "@/lib/format";
 export function Status({ section }: { section: Section }) {
   return (
     <span className={`status ${section.status === "available" ? "ready" : ""}`}>
-      <span />
-      {section.status === "available" ? "Data available" : "Awaiting data"}
+      {section.status === "available"
+        ? "Exported analysis"
+        : "Awaiting research export"}
     </span>
   );
 }
@@ -23,41 +24,39 @@ export function PageHeading({
 }) {
   return (
     <header className="page-heading">
-      <div>
-        <div className="eyebrow">{eyebrow}</div>
-        <h1>{title}</h1>
-        <p>{description}</p>
+      <div className="heading-meta">
+        <span className="meta-label">{eyebrow}</span>
+        {action}
       </div>
-      {action}
+      <h1>{title}</h1>
+      <p className="lead">{description}</p>
     </header>
   );
 }
 export function MetricCards({ metrics }: { metrics: Metric[] }) {
+  if (!metrics.length) return null;
   return (
-    <div className="metric-grid">
+    <dl className="metric-grid">
       {metrics.map((metric) => (
-        <article className="metric" key={metric.id}>
-          <span>{metric.label}</span>
-          <strong>{formatValue(metric.value, metric.unit)}</strong>
-          <p>{metric.note}</p>
-        </article>
+        <div className="metric" key={metric.id}>
+          <dt>{metric.label}</dt>
+          <dd>{formatValue(metric.value, metric.unit)}</dd>
+          <dd className="metric-note">{metric.note}</dd>
+        </div>
       ))}
-    </div>
+    </dl>
   );
 }
-export function Provenance({ source }: { source: AvailableSection["source"] }) {
+export function Provenance({ source }: { source: Source }) {
   return (
-    <section className="provenance panel">
-      <div className="panel-title">
-        <div>
-          <div className="eyebrow">RESEARCH CONTEXT</div>
-          <h2>Source & methodology</h2>
-        </div>
-        <FileCheck2 size={22} />
+    <section className="provenance">
+      <div className="section-line">
+        <span className="meta-label">Source note</span>
+        <h2>Data & measurement basis</h2>
       </div>
       <dl className="source-grid">
         <div>
-          <dt>Source</dt>
+          <dt>Analysis</dt>
           <dd>
             {source.label}
             <code>{source.path}</code>
@@ -66,7 +65,7 @@ export function Provenance({ source }: { source: AvailableSection["source"] }) {
         <div>
           <dt>Observation period</dt>
           <dd>
-            {formatDate(source.period.start)} – {formatDate(source.period.end)}
+            {formatDate(source.period.start)} to {formatDate(source.period.end)}
           </dd>
         </div>
         <div>
@@ -74,14 +73,19 @@ export function Provenance({ source }: { source: AvailableSection["source"] }) {
           <dd>{formatDate(source.asOf)}</dd>
         </div>
       </dl>
-      <p>{source.methodology}</p>
-      {source.notes.length > 0 && (
-        <ul>
-          {source.notes.map((note, index) => (
-            <li key={index}>{note}</li>
-          ))}
-        </ul>
-      )}
+      <div className="reading-column">
+        <p>{source.methodology}</p>
+        {source.notes.length > 0 && (
+          <ul>
+            {source.notes.map((note, index) => (
+              <li key={index}>{note}</li>
+            ))}
+          </ul>
+        )}
+      </div>
+      <Link className="text-link" href="/methodology">
+        Read methodology & limitations <span aria-hidden="true">→</span>
+      </Link>
     </section>
   );
 }
@@ -93,33 +97,48 @@ export function PendingData({
   reason: string;
 }) {
   return (
-    <section className="empty-panel">
-      <div className="empty-icon">
-        <Database size={28} strokeWidth={1.4} />
+    <aside className="pending-note">
+      <span className="meta-label">Evidence status</span>
+      <div>
+        <h2>{title}</h2>
+        <p>{reason}</p>
       </div>
-      <div className="eyebrow">ANALYSIS PENDING</div>
-      <h2>{title}</h2>
-      <p>{reason}</p>
-      <span className="empty-note">
-        Results will appear here after a reviewed analysis is exported.
-      </span>
-    </section>
+    </aside>
+  );
+}
+export function FigurePlaceholder({
+  number,
+  title,
+  children,
+}: {
+  number: string;
+  title: string;
+  children: ReactNode;
+}) {
+  return (
+    <figure className="empty-figure">
+      <figcaption>
+        <span className="meta-label">Figure {number}</span>
+        <h2>{title}</h2>
+      </figcaption>
+      <div className="figure-unavailable">
+        <span className="figure-cross" aria-hidden="true">
+          +
+        </span>
+        <p>{children}</p>
+        <span className="meta-label">No values plotted</span>
+      </div>
+    </figure>
   );
 }
 export function PageFooter() {
   return (
     <footer className="page-footer">
-      <span>
-        Quant Research <span className="footer-divider">/</span> Investment &
-        risk dashboard
-      </span>
-      <a
-        href="https://github.com/Zaiys/quant-investment-risk-dashboard"
-        target="_blank"
-        rel="noreferrer"
-      >
-        View project <ArrowUpRight size={14} />
-      </a>
+      <span>Quantitative Investment & Risk Analysis</span>
+      <div>
+        <Link href="/methodology">Methodology & limitations</Link>
+        <span>Research interface · v2</span>
+      </div>
     </footer>
   );
 }

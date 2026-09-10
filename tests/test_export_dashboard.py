@@ -79,5 +79,33 @@ class ExportTests(unittest.TestCase):
         self.assertEqual(data["sections"]["momentum"]["status"], "awaiting")
 
 
+class ExtendedContractTests(unittest.TestCase):
+    def setUp(self):
+        self.data = json.loads((ROOT / 'web/tests/fixtures/available.json').read_text())
+
+    def test_matrix_and_reference_consistency(self):
+        mutations = [
+            lambda d: d['sections']['market']['metrics'][0].update(entityId='unknown'),
+            lambda d: d['sections']['market']['charts'][0].update(scenarioId='unknown'),
+            lambda d: d['sections']['correlation']['matrices'][0]['values'].pop(),
+            lambda d: d['sections']['correlation']['matrices'][0]['values'][0].__setitem__(1, 1.2),
+            lambda d: d['sections']['correlation']['matrices'][0]['labels'][1].update(id='a'),
+        ]
+        for mutation in mutations:
+            with self.subTest(mutation=mutation):
+                data = copy.deepcopy(self.data)
+                mutation(data)
+                with self.assertRaises(Exception):
+                    validate_dashboard(data)
+
+    def test_explicit_metadata_and_documented_methodology_are_preserved(self):
+        research = {'updatedAt':'2024-02-01','period':{'start':'2024-01-01','end':'2024-01-31'},'universe':[{'id':'a','name':'Test A','availableFrom':'2023-01-01','availableTo':'2024-01-31'}]}
+        methodology = {'status':'available','source':self.data['sections']['market']['source'],'items':[{'id':'basis','title':'Test definition','detail':'Synthetic test documentation.'}]}
+        with tempfile.TemporaryDirectory() as directory:
+            target=write_dashboard({'market':self.data['sections']['market']}, Path(directory)/'dashboard.json', research=research, methodology=methodology)
+            exported=json.loads(target.read_text())
+            self.assertEqual(exported['research'],research)
+            self.assertEqual(exported['methodology'],methodology)
+
 if __name__ == "__main__":
     unittest.main()

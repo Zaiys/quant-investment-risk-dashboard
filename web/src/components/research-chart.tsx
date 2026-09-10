@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import {
   Bar,
   BarChart,
@@ -15,35 +16,31 @@ import {
 } from "recharts";
 import type { Chart } from "@/lib/types";
 import { formatValue } from "@/lib/format";
-const palette = [
-  "#1a6b66",
-  "#4c72b5",
-  "#b47829",
-  "#9065ad",
-  "#bf5968",
-  "#65768e",
-];
+const palette = ["#245548", "#353c3c", "#667069", "#496d60", "#71776f"];
 // Align coordinates for rendering only. Missing values stay null; no interpolation or finance calculations.
 export function alignSeries(chart: Chart) {
-  const xs = Array.from(
-    new Set(
-      chart.series.flatMap((series) => series.points.map((point) => point.x)),
-    ),
-  );
-  return xs.map((x) =>
+  return chart.series[0].points.map((point, index) =>
     Object.fromEntries([
-      ["x", x],
-      ...chart.series.map((series, index) => [
-        `series${index}`,
-        series.points.find((point) => point.x === x)?.y ?? null,
+      ["x", point.x],
+      ...chart.series.map((series, seriesIndex) => [
+        `series${seriesIndex}`,
+        series.points[index].y,
       ]),
     ]),
   );
 }
-export function ResearchChart({ chart }: { chart: Chart }) {
+export function ResearchChart({ chart: original }: { chart: Chart }) {
+  const [seriesId, setSeriesId] = useState("");
+  const chart = {
+    ...original,
+    series: seriesId
+      ? original.series.filter((series) => series.id === seriesId)
+      : original.series,
+  };
+
   const numericX = chart.xUnit !== "text";
   const grid = (
-    <CartesianGrid stroke="#e9edf1" strokeDasharray="3 5" vertical={false} />
+    <CartesianGrid stroke="#d7dcd5" strokeDasharray="3 5" vertical={false} />
   );
   const xAxis = (
     <XAxis
@@ -82,7 +79,7 @@ export function ResearchChart({ chart }: { chart: Chart }) {
         )
       }
       contentStyle={{
-        borderRadius: 8,
+        borderRadius: 0,
         border: "1px solid #dce3e9",
         fontSize: 14,
       }}
@@ -101,6 +98,24 @@ export function ResearchChart({ chart }: { chart: Chart }) {
         </div>
         <span className="chart-unit">{chart.yLabel}</span>
       </div>
+      {original.series.length > 1 && (
+        <div className="chart-controls">
+          <label>
+            Inspect series
+            <select
+              value={seriesId}
+              onChange={(event) => setSeriesId(event.target.value)}
+            >
+              <option value="">All series</option>
+              {original.series.map((series) => (
+                <option value={series.id} key={series.id}>
+                  {series.label}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+      )}
       <div
         className="chart"
         role="img"
@@ -138,7 +153,7 @@ export function ResearchChart({ chart }: { chart: Chart }) {
                   name={series.label}
                   dataKey={`series${index}`}
                   fill={palette[index % palette.length]}
-                  radius={[3, 3, 0, 0]}
+                  radius={0}
                   isAnimationActive={false}
                 />
               ))}
@@ -156,7 +171,14 @@ export function ResearchChart({ chart }: { chart: Chart }) {
                   name={series.label}
                   dataKey={`series${index}`}
                   stroke={palette[index % palette.length]}
-                  strokeWidth={2.2}
+                  strokeWidth={2}
+                  strokeDasharray={
+                    index % 3 === 0
+                      ? undefined
+                      : index % 3 === 1
+                        ? "7 3"
+                        : "2 3"
+                  }
                   dot={
                     series.points.length < 2 ||
                     series.points.some((point) => point.y === null)

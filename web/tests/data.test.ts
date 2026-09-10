@@ -13,8 +13,10 @@ describe("research handoff", () => {
   });
   it("accepts an empty snapshot without supplying fake metrics", () => {
     const data = parseDashboard({
-      schemaVersion: 1,
+      schemaVersion: 2,
       generatedAt: null,
+      research: snapshot.research,
+      methodology: snapshot.methodology,
       sections: Object.fromEntries(
         Object.keys(snapshot.sections).map((key) => [
           key,
@@ -37,7 +39,7 @@ describe("research handoff", () => {
     [
       "unknown version",
       (d: ReturnType<typeof fixture>) => {
-        d.schemaVersion = 2;
+        d.schemaVersion = 99;
       },
     ],
     [
@@ -155,5 +157,69 @@ describe("display formatting", () => {
   });
   it("does not shift observation dates across time zones", () => {
     expect(formatDate("2024-01-01")).toBe("1 Jan 2024");
+  });
+});
+
+describe("extended research contract", () => {
+  it.each([
+    [
+      "unknown entity",
+      (d: ReturnType<typeof fixture>) => {
+        d.sections.market.metrics[0].entityId = "missing";
+      },
+    ],
+    [
+      "unknown scenario",
+      (d: ReturnType<typeof fixture>) => {
+        d.sections.market.charts[0].scenarioId = "missing";
+      },
+    ],
+    [
+      "reversed scenario",
+      (d: ReturnType<typeof fixture>) => {
+        d.sections.market.scenarios[0].period.start = "2025-01-01";
+      },
+    ],
+    [
+      "matrix dimensions",
+      (d: ReturnType<typeof fixture>) => {
+        d.sections.correlation.matrices[0].values.pop();
+      },
+    ],
+    [
+      "correlation outside bounds",
+      (d: ReturnType<typeof fixture>) => {
+        d.sections.correlation.matrices[0].values[0][1] = 1.2;
+      },
+    ],
+    [
+      "duplicate matrix labels",
+      (d: ReturnType<typeof fixture>) => {
+        d.sections.correlation.matrices[0].labels[1].id = "a";
+      },
+    ],
+    [
+      "reversed asset history",
+      (d: ReturnType<typeof fixture>) => {
+        d.research.universe = [
+          {
+            id: "a",
+            name: "Test A",
+            availableFrom: "2025-01-01",
+            availableTo: "2024-01-01",
+          },
+        ];
+      },
+    ],
+    [
+      "undocumented methodology",
+      (d: ReturnType<typeof fixture>) => {
+        d.methodology = { status: "available", items: [] };
+      },
+    ],
+  ])("rejects %s", (_, change) => {
+    const data = fixture();
+    change(data);
+    expect(() => parseDashboard(data)).toThrow();
   });
 });
