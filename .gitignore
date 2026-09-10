@@ -5,3 +5,10 @@ __pycache__/
 *.pyc
 data/raw/
 
+node_modules/
+.next/
+out/
+coverage/
+.vercel/
+*.tsbuildinfo
+.venv-dashboard/

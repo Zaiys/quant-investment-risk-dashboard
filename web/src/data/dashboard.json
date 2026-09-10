@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": null,
+  "sections": {
+    "market": {
+      "status": "awaiting",
+      "reason": "Market exploration results have not been exported. The current market notebook is empty."
+    },
+    "risk-return": {
+      "status": "awaiting",
+      "reason": "Risk and return estimates are awaiting a reviewed Python analysis export."
+    },
+    "portfolio": {
+      "status": "awaiting",
+      "reason": "Portfolio weights, performance and risk contributions have not been exported."
+    },
+    "stress": {
+      "status": "awaiting",
+      "reason": "Stress scenarios and their measured outcomes have not been exported."
+    },
+    "momentum": {
+      "status": "awaiting",
+      "reason": "Awaiting results from notebooks/02_momentum_strategy.ipynb. Strategy research is in progress."
+    }
+  }
+}
