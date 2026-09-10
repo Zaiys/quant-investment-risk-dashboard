@@ -6,7 +6,7 @@ import { sections } from "@/lib/sections";
 import { PageHeading, PendingData, Status } from "@/components/ui";
 import { AvailableAnalysis } from "@/components/available-analysis";
 import { ResearchView, AssetHistory } from "@/components/research-views";
-export const dynamicParams = false;
+// Known chapters are prerendered; unknown names use the explicit notFound guard.
 export function generateStaticParams() {
   return sections.map((section) => ({ section: section.key }));
 }
@@ -17,9 +17,10 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { section } = await params;
   const config = sections.find((item) => item.key === section);
+  if (!config) notFound();
   return {
-    title: config?.title ?? "Not found",
-    description: config?.description,
+    title: config.title,
+    description: config.description,
   };
 }
 export default async function ResearchPage({
