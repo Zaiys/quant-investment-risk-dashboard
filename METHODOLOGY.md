@@ -1,0 +1,63 @@
+# Research methodology
+
+Verified from `notebooks/01_market_exploration.ipynb`.
+
+## Yahoo Finance and adjusted prices
+
+Yahoo Finance via yfinance 1.7.0. Asset field: Close with auto_adjust=True, repair=False, interval=1d and rounding=False. The installed yfinance implementation renames Yahoo Adj Close to Close; these are split/distribution-adjusted prices, not unadjusted share prices. ^IRX uses Close with auto_adjust=False. Inputs were downloaded 2026-09-11T10:23:34.223001+00:00 and are frozen locally with SHA-256 checksums; acquisition details are recorded in data/provenance/market-inputs.json.
+
+## Requested and actual observations
+
+Requested from 1980-01-01 inclusive to 2026-09-11 exclusive. Actual full coverage: 1980-01-02 to 2026-09-10; the last observation is 2026-09-10 for every asset and ^IRX. The 1980 start follows the recovered code and its pre-1990 investigation. Every asset retains its own first observation, shown in the history table.
+
+## Universe
+
+50 selected companies plus five benchmark ETFs: SPY, QQQ, IWM, TLT, GLD. Companies: AAPL, MSFT, NVDA, AVGO, ORCL, CRM, CSCO, IBM, AMD, QCOM, TXN, INTU, NOW, GOOGL, META, NFLX, DIS, AMZN, TSLA, WMT, COST, HD, MCD, NKE, BKNG, JPM, BAC, GS, MS, AXP, V, MA, BRK-B, LLY, JNJ, ABBV, UNH, TMO, ABT, AMGN, XOM, CVX, GE, CAT, RTX, PG, KO, PEP, PM, LIN. Ticker symbols are the identifiers supplied by the research; fund/company names are not inferred.
+
+## Daily returns and CAGR
+
+Simple daily return r[t] = P[t] / P[t-1] - 1, using pct_change(fill_method=None). Missing prices are not filled. Full-history total return = last adjusted price / first adjusted price - 1. CAGR = (last / first) ** (1 / years) - 1, with years = elapsed calendar days / 365.25. CAGR differs from arithmetic annualised return.
+
+## Annualisation and Sharpe
+
+Volatility = sample standard deviation of daily asset returns (ddof=1) × sqrt(252). Sharpe = mean(aligned asset return minus daily risk-free proxy) / sample standard deviation of those same aligned asset returns × sqrt(252). The denominator is asset-return volatility, not excess-return volatility. Each full-history Sharpe uses its own valid asset/risk-free overlap.
+
+## Treasury bill proxy and alignment
+
+Preserved approximation: daily_rf = (1 + ^IRX Close / 100) ** (1 / 252) - 1. The percentage yield is treated as an effective annual rate; this is not an exact conversion of a Treasury bill bank-discount quote into holding-period returns. Align to price dates, forward fill only, then use shared nonmissing return/rate dates. The snapshot forward fills 64 dates and leaves 0 dates unavailable. It uses same-date yields without a lag; this is descriptive historical analysis, not an implementable risk-free trading strategy.
+
+## Beta and correlations
+
+Beta = sample covariance(asset daily return, SPY daily return) / sample variance(SPY), using identical pairwise valid observations. The original beta table excludes SPY itself; its asset-level beta is null. The full-history Pearson correlation matrix uses pairwise available daily returns, so estimation periods differ by pair; the SPY relationships table gives exact overlap dates/counts. The separate common-company matrix uses the shared company return sample. Correlations are not assumed stable across regimes.
+
+## Full histories and common observations
+
+Full-history metrics use each asset's available history. The fair company-only comparison uses all 50 companies from 2013-01-02 to 2026-09-10: 3443 shared prices and 3442 identical daily returns per company. The exploratory 2012 eligibility count is not the final sample. Levels are restricted to dates valid for every company; daily returns are computed on the original date grid before removing incomplete rows, so gaps cannot become multi-day returns labelled daily. This snapshot omits 0 internal price rows and 0 daily return rows. Common Sharpe uses the same aligned risk-free dates for every company.
+
+## Indexed performance and chart sampling
+
+Full-history index = 100 × adjusted price / that asset’s first valid adjusted price; these individual starts differ. Common-period index = 100 × adjusted price / adjusted price at the shared start. Portfolio and SPY paths start at 100 on the same initial date. Long-history website charts select existing quarter-end observations plus initial/final observations and any gap boundaries in Python; no financial values are averaged or recomputed. Stress charts retain every daily observation. Full daily indexed outputs remain in the local reviewed tables; all metrics use daily data.
+
+## Maximum drawdown
+
+Drawdown = wealth / running maximum wealth - 1; maximum drawdown is its minimum, reported as a negative fraction. Full-history asset drawdown uses the adjusted price path from its first valid price. Portfolio and every stress evaluation explicitly prepend wealth 1.0 before the first included return, so an immediate decline is counted. The baseline date is the preceding observed price date, which can precede the requested stress window; it contributes no extra return.
+
+## Portfolio construction and comparison
+
+Weights: SPY 35%, QQQ 15%, IWM 10%, TLT 15%, GLD 10%, JPM 5%, JNJ 5%, XOM 5%. Weights sum to 100%. Daily portfolio return is the weighted sum of constituent simple daily returns on complete shared observations. Constant weights imply daily rebalancing, without costs, taxes, slippage or cash flows. Arithmetic annualised portfolio/SPY return = daily mean × 252, not CAGR. The portfolio and SPY share 5485 returns from 2004-11-19 to 2026-09-10, with wealth initially 1 on 2004-11-18.
+
+## Component risk contributions
+
+Annual covariance matrix = sample daily covariance × 252. Portfolio volatility = sqrt(wᵀΣw). Marginal volatility contribution = Σw / portfolio volatility; component contribution = weight × marginal contribution. Components sum to portfolio volatility; each component divided by total volatility gives its risk share, summing to 100%. Negative shares are allowed and reflect this sample.
+
+## Historical stress windows
+
+Global Financial Crisis: 2007-10-01 through 2009-03-31; COVID Crash: 2020-02-01 through 2020-04-30; 2022 Selloff: 2022-01-01 through 2022-12-31. Returns whose dates fall inside each inclusive window are compounded from initial wealth 1. Portfolio, SPY and constituent outcomes use identical dates; tables report compounded period return and minimum drawdown, not annualised returns. Actual first/last return dates and counts accompany each scenario.
+
+## Limitations and uncertainty
+
+The selected surviving companies introduce survivorship and selection bias; delisted/failed companies are not represented. Listing dates and available histories differ. Yahoo adjustments, corporate actions, ticker histories and later data revisions can affect results; downloads were checked for structure and internal identities, not independently reconciled against exchange records. Unusually large historical moves are retained without automatic repair. Correlations and beta can change across regimes. The risk-free transformation and constant-weight frictionless portfolio are simplifying assumptions. Historical performance does not predict future results.
+
+## Strategy research remains pending
+
+Quantitative Strategy / Momentum awaits the user-authored notebooks/02_momentum_strategy.ipynb and review of its signals, timing, portfolio rules, costs and backtest outputs. No momentum results are included in the version 2 snapshot.

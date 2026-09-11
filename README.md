@@ -6,9 +6,9 @@ A research presentation layer for exploring markets, comparing risk and return, 
 
 ## Current research status
 
-The repository currently has no published analysis outputs. At implementation, `notebooks/01_market_exploration.ipynb`, `METHODOLOGY.md`, `PROJECT.md` and `requirements.txt` were empty. No research was reconstructed or executed, and no financial assumptions were introduced.
+The recovered market notebook has been executed and verified using frozen Yahoo Finance inputs. The version 2 dashboard snapshot covers 50 companies and five benchmark ETFs through **10 September 2026**. Full available histories begin as early as 2 January 1980; the shared 50-company period begins on 2 January 2013.
 
-The application deliberately shows **Awaiting data** until reviewed Python outputs are exported. Synthetic numbers exist only in automated test fixtures; the production dashboard contains no sample performance data.
+Overview, Market Explorer, Risk vs Return, Diversification & Correlation, Portfolio Analysis, Stress Testing and Methodology are populated from reviewed Python outputs. See [METHODOLOGY.md](METHODOLOGY.md) for formulas and limitations, and [docs/REPRODUCIBILITY.md](docs/REPRODUCIBILITY.md) for input acquisition, cached execution and exact export checks.
 
 `notebooks/02_momentum_strategy.ipynb` is reserved for separately authored research. The dashboard does not create or modify that notebook. Its momentum page is UI-only, and version 2 of the export contract rejects momentum results.
 
@@ -25,7 +25,7 @@ The application deliberately shows **Awaiting data** until reviewed Python outpu
 | 07 Quantitative Strategy         | Analysis-in-progress interface for the separate momentum notebook           |
 | 08 Methodology & Limitations     | Published assumptions and an explicitly unverified review checklist         |
 
-The presentation uses paper tones, ink-like text, restrained green accents and editorial typography. Each chapter has its own research question and layout. The methodology chapter distinguishes documented assumptions from questions that still need checking. Global Financial Crisis, COVID crash and 2022 selloff appear as requested study topics; no windows or outcomes are assumed.
+The presentation uses paper tones, ink-like text, restrained green accents and editorial typography. Each chapter has its own research question and layout. The methodology chapter distinguishes documented assumptions from questions that still need checking. The Global Financial Crisis, COVID crash and 2022 selloff use the exact windows documented in the verified notebook.
 
 Available outputs use metric strips, line/bar/scatter charts, correlation matrices and sortable tables. Optional entity and scenario selectors inspect supplied records; they do not recalculate values. Every available section shows source, observation period, data date, methodology and notes. Chart values remain accessible as tables; missing observations remain missing. Raw share prices are explicitly distinguished from comparable indexed performance.
 
@@ -56,8 +56,11 @@ With the production server running, use `npm run smoke` in a second terminal ins
 ## Architecture
 
 ```text
-notebooks/                     Research files; preserved
-src/                           Optional future Python analysis modules
+notebooks/                     Verified market notebook and separate strategy research
+scripts/market_data.py         Resumable Yahoo acquisition and checked offline loading
+scripts/run_market_research.py  Fresh-kernel market notebook execution
+scripts/build_market_dashboard.py  Adapter from verified tables to the existing v2 contract
+data/provenance/               Tracked input, verification and snapshot hash records
 scripts/export_dashboard.py    Validation and atomic JSON publication; no finance logic
 requirements-dashboard.txt     Separate optional export-validation dependency
 web/
@@ -65,7 +68,7 @@ web/
   src/components/              Navigation, charts, metrics, provenance and sortable tables
   src/lib/                     Type definitions, validation and display formatting
   src/data/dashboard.schema.json  Shared versioned data contract
-  src/data/dashboard.json      Published analysis snapshot; currently awaiting data
+  src/data/dashboard.json      Verified market analysis snapshot; momentum awaiting data
   tests/                       Parsing/UI tests and isolated synthetic fixtures
   vercel.json                  Next.js deployment settings
   package-lock.json            Locked frontend dependencies
@@ -77,7 +80,7 @@ docs/DESIGN.md                  Research-specific design system and accessibilit
 .github/workflows/dashboard.yml  Automated validation on pushes and pull requests
 ```
 
-`src/` is a future integration location; no finance modules have been fabricated. Next.js statically prerenders all eight chapters from the validated JSON snapshot. The `/export` route downloads the same snapshot. No database, login, live data service, trading execution or background calculation is required.
+Next.js statically prerenders all eight chapters from the validated JSON snapshot. The `/export` route downloads the same snapshot. No database, login, live data service, trading execution or background calculation is required.
 
 The browser formats numbers and arranges chart coordinates; it does not calculate returns, annualise volatility, estimate Sharpe ratios, construct weights, rebalance portfolios or simulate strategies. Those decisions belong to the Python research.
 
@@ -103,11 +106,12 @@ Commit the reviewed snapshot and rebuild/redeploy to update the public app. Ther
 
 ## Checks
 
-From the repository root:
+After setting up the research environment as described in [reproducibility instructions](docs/REPRODUCIBILITY.md), from the repository root:
 
 ```bash
-.venv-dashboard/bin/python -m unittest discover -s tests -v
-.venv-dashboard/bin/python scripts/export_dashboard.py --check
+.venv-research/bin/python -m unittest discover -s tests -v
+.venv-research/bin/python -m scripts.build_market_dashboard --check
+.venv-research/bin/python scripts/export_dashboard.py --check
 cd web
 npm run test
 npm run lint

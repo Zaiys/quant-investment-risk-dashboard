@@ -143,3 +143,11 @@ Version 2 adds the correlation section, research record and methodology publicat
 To add momentum later, first review the separately created `notebooks/02_momentum_strategy.ipynb` and agree its export definitions. Then update the JSON Schema, TypeScript types, Python helper, validation tests and momentum route together. The existing widget components can present its reviewed outputs. Changing formulas, assumptions or data periods remains Python research work.
 
 The schema deliberately contains no hardcoded universe, portfolio allocation, signal definition, lookback period, rebalancing schedule, cost assumption or performance estimate.
+
+## Verified market adapter
+
+The market notebook now writes checked numeric tables to `data/reviewed/` through `scripts/research_outputs.py`. Run `python -m scripts.build_market_dashboard` to map those tables into this unchanged version 2 contract, or add `--check` to require exact agreement with the existing snapshot. The adapter performs presentation sampling of existing long-history points without computing financial estimators or rounding. All daily calculations remain in Python research.
+
+See [REPRODUCIBILITY.md](REPRODUCIBILITY.md) for cache provenance, execution, sampling frequency, output hashes and the independent published-value checks. Momentum remains awaiting data.
+
+The server reads and validates the original JSON text rather than importing it as a compiled JSON module. This prevents numeric-literal rewriting during the build. `/export` returns the original validated bytes; production smoke checks verify byte-for-byte equality.
