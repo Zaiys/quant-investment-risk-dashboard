@@ -1,0 +1,10 @@
+# Python research runtime; exact verification environment: requirements-research-lock.txt
+pandas>=2.2,<4
+numpy>=2,<3
+yfinance>=1.7,<2
+matplotlib>=3.9,<4
+nbformat>=5.10,<6
+nbclient>=0.10,<1
+ipykernel>=6.29,<8
+pyarrow>=19,<26
+jsonschema>=4.23,<5

@@ -12,3 +12,6 @@ coverage/
 .vercel/
 *.tsbuildinfo
 .venv-dashboard/
+.venv-research/
+.matplotlib/
+data/reviewed/
