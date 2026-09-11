@@ -1,0 +1,113 @@
+{
+  "checked_at": "2026-09-11T11:51:36.572930+00:00",
+  "status": "passed",
+  "implementation_commit": "a8551cc780fda397a0078b22b9e87b928e1614bf",
+  "snapshot_sha256": "37d1d5ef13a638a716bc0b890ae2152b4881df27f7f43ac14c9a0eadabd5c96f",
+  "runtime": {
+    "python": "3.12.14",
+    "node": "22.23.2"
+  },
+  "notebook": {
+    "file": "notebooks/02_momentum_strategy.ipynb",
+    "cells": 36,
+    "executed_code_cells": 16,
+    "fresh_kernel": true,
+    "errors": 0
+  },
+  "python_tests": {
+    "passed": 28,
+    "failed": 0,
+    "skipped": 0
+  },
+  "frontend_tests": {
+    "passed": 47,
+    "failed": 0
+  },
+  "checks": {
+    "python_exporter": "passed",
+    "exact_snapshot_rebuild": "passed",
+    "shared_schema": "passed",
+    "lint": "passed",
+    "typescript": "passed",
+    "production_build": "passed",
+    "git_diff_check": "passed"
+  },
+  "http_smoke": {
+    "routes": [
+      "/",
+      "/market",
+      "/risk-return",
+      "/correlation",
+      "/portfolio",
+      "/stress",
+      "/momentum",
+      "/methodology",
+      "/guide"
+    ],
+    "all_status_200": true,
+    "unknown_route_status": 404,
+    "download_byte_exact": true
+  },
+  "responsive": [
+    {
+      "route": "/momentum",
+      "width": 390,
+      "document_scroll_width": 390,
+      "overflow": false
+    },
+    {
+      "route": "/momentum",
+      "width": 768,
+      "document_scroll_width": 768,
+      "overflow": false
+    },
+    {
+      "route": "/momentum",
+      "width": 1440,
+      "document_scroll_width": 1440,
+      "overflow": false
+    },
+    {
+      "route": "/guide",
+      "width": 390,
+      "document_scroll_width": 390,
+      "overflow": false
+    },
+    {
+      "route": "/guide",
+      "width": 768,
+      "document_scroll_width": 768,
+      "overflow": false
+    },
+    {
+      "route": "/guide",
+      "width": 1440,
+      "document_scroll_width": 1440,
+      "overflow": false
+    }
+  ],
+  "visual_review": [
+    "Desktop and phone strategy heading and chart layouts",
+    "Desktop and phone guide typography",
+    "Guide video placeholder and reading anchors",
+    "Mobile chapter menu",
+    "Benchmark and series selectors",
+    "Expandable chart source table"
+  ],
+  "browser_errors": [],
+  "browser_warnings": [],
+  "preservation": {
+    "baseline_commit": "cb1b896",
+    "market_notebook_byte_identical": true,
+    "legacy_momentum_notebook_byte_identical": true,
+    "market_input_and_verification_provenance_byte_identical": true,
+    "five_market_sections_exactly_equal": true,
+    "market_methodology_items_preserved": true
+  },
+  "deployment": {
+    "pushed": false,
+    "merged": false,
+    "deployed": false,
+    "ready_for_user_approved_preview": true
+  }
+}
