@@ -1,4 +1,4 @@
-# Reproducing the verified market analysis
+# Reproducing the verified market and momentum analysis
 
 The recovered source is preserved at commit `c9fd6cc15537cdd5a5c23a4b67ed260502d4d407`. Research work is on `feature/vercel-dashboard`; the original checkout and its user-authored momentum work are separate. No merge or deployment is part of this workflow.
 
@@ -11,6 +11,7 @@ python3.12 -m venv .venv-research
 .venv-research/bin/python -m pip install -r requirements-research-lock.txt
 .venv-research/bin/python -m scripts.market_data --end 2026-09-11
 .venv-research/bin/python -m scripts.run_market_research
+.venv-research/bin/python -m scripts.run_momentum_research
 .venv-research/bin/python -m scripts.build_market_dashboard
 .venv-research/bin/python -m scripts.build_market_dashboard --check
 .venv-research/bin/python scripts/export_dashboard.py --check
@@ -23,17 +24,17 @@ Acquisition requests Yahoo Finance daily histories from 1980-01-01 through 2026-
 
 To rerun this exact snapshot, keep the existing raw cache and **skip acquisition**. Yahoo can revise historical adjustments; re-downloading the same date interval later does not guarantee the same values or hashes. Raw inputs, partial responses and local notebook output tables are ignored by Git. Transfer the complete cached files and manifest together when exact reproduction is required on another machine. A fresh acquisition is a new dataset requiring another verification and export.
 
-The runner executes only `notebooks/01_market_exploration.ipynb` from top to bottom in a fresh Jupyter kernel and writes its outputs only after successful completion. It checks notebook format, syntax, execution counts and errors. The notebook reads cached inputs, applies the documented research, verifies identities, and saves computed tables under `data/reviewed/`. No momentum notebook is created or executed.
+The runner executes only `notebooks/01_market_exploration.ipynb` from top to bottom in a fresh Jupyter kernel and writes its outputs only after successful completion. It checks notebook format, syntax, execution counts and errors. The notebook reads cached inputs, applies the documented research, verifies identities, and saves computed tables under `data/reviewed/`. The separate runner for notebook 02 is described below; the market runner does not modify it.
 
 ## Reviewed outputs and dashboard
 
 `data/reviewed/manifest.json` binds the computed tables to the notebook source, research-helper hashes and input manifest. `data/provenance/research-verification.json` preserves this verification record in Git, including asset sample counts, stress dates, alignment checks and output hashes. Notebook output images/display tables are not parsed as financial data.
 
-`scripts/build_market_dashboard.py` reads the verified tables, rejects stale source or changed output files, maps finite scalar values without rounding, and publishes version 2 through the existing `scripts/export_dashboard.py` validator. No financial estimators are implemented in the adapter or TypeScript. It also writes `METHODOLOGY.md` from the same reviewed metadata used in the website.
+`scripts/build_market_dashboard.py` reads the verified tables, rejects stale source or changed output files, maps finite scalar values without rounding, and publishes version 3 through the existing `scripts/export_dashboard.py` validator. No financial estimators are implemented in the adapter or TypeScript. It also writes `METHODOLOGY.md` from the same reviewed metadata used in the website.
 
 Long-history chart exports contain actual observed quarter ends, every series' first/final valid observations, and gap boundaries if present. The adapter selects existing values only. Stress curves retain daily observations. All estimates and drawdown extrema use full daily data. The full daily indexed series are retained in local reviewed Parquet files. This avoids turning the finished website's accessible chart tables into hundreds of thousands of rows; the sampling frequency is explicit on each chart.
 
-The snapshot retains the notebook's separation between individual histories and the 50-company common period. It preserves null SPY beta, because the original asset beta table excludes SPY itself. Momentum remains an explicit awaiting state. The server reads the original JSON text and parses it at runtime, avoiding the build tool’s numeric-literal rewriting. The snapshot download returns that validated source text byte for byte. Regression tests cover this exact-value boundary. Long legends/tooltips are bounded within the existing chart panels so the full asset universe remains usable at mobile widths; the design and version 2 schema are unchanged.
+The snapshot retains the notebook's separation between individual histories and the 50-company common period. It preserves null SPY beta, because the original asset beta table excludes SPY itself. Momentum is supplied separately from the reviewed notebook 02 outputs. The server reads the original JSON text and parses it at runtime, avoiding the build tool’s numeric-literal rewriting. The snapshot download returns that validated source text byte for byte. Regression tests cover this exact-value boundary. Long legends/tooltips are bounded within the existing chart panels so the full asset universe remains usable at mobile widths; the design is preserved; the version 3 schema adds a dedicated momentum definition.
 
 `data/provenance/dashboard-crosscheck.json` records the published snapshot hash and exact-value comparison. Integration tests compare every table cell, chart coordinate/value and matrix cell with its reviewed Python frame. The standalone `--check` adapter run compares the entire snapshot with a rebuilt payload. Local integration tests require the reviewed cache; on fresh CI checkouts those cache-dependent tests are explicitly skipped, while deterministic correction, sampling, exporter and frontend tests run normally.
 
@@ -51,3 +52,27 @@ No formulas were changed to force execution. CAGR, sample volatility, Sharpe, co
 Verification establishes source settings, reproducible execution and internal mathematical consistency. It does not independently certify Yahoo prices against exchange records. The preserved ^IRX transformation is an approximation rather than an exact bank-discount-yield conversion. The documented survivorship bias, corporate-action risks, changing correlations and frictionless rebalancing assumptions remain material. See [METHODOLOGY.md](../METHODOLOGY.md).
 
 Source-setting references: [yfinance download parameters](https://ranaroussi.github.io/yfinance/reference/api/yfinance.download.html), [Yahoo ^IRX historical field definitions](https://finance.yahoo.com/quote/%5EIRX/history/). The installed yfinance adjustment implementation was also inspected: it renames Yahoo `Adj Close` to `Close` when `auto_adjust=True`.
+
+## Momentum notebook 02 — frozen-data rerun
+
+The completed `notebooks/02_momentum_strategy.ipynb` uses the same verified 50-company list and cache. Do not acquire new data for this rerun. The original market notebook and its reviewed outputs remain unchanged.
+
+```bash
+.venv-research/bin/python -m scripts.run_momentum_research
+.venv-research/bin/python -m unittest discover -s tests -v
+.venv-research/bin/python -m scripts.build_market_dashboard
+.venv-research/bin/python -m scripts.build_market_dashboard --check
+.venv-research/bin/python scripts/export_dashboard.py --check
+```
+
+The runner starts a fresh Jupyter kernel with the selected Python environment, executes all 16 code cells, and writes notebook output only after successful completion. No additional packages beyond the locked research environment are required. The reusable calculation functions are in `scripts/momentum_research.py`; the notebook supplies the sequence, explanations, diagnostics, charts, summary and verification. `scripts/momentum_outputs.py` independently checks the raw-price signal and rank identities, every holding-month endpoint return, daily benchmark alignment, risk-free conversion and performance estimates before persisting outputs.
+
+`data/reviewed/momentum/` holds 21 Parquet tables: monthly endpoint prices, signals, target weights, selected holdings, daily and monthly returns, wealth and indexed wealth, drawdowns, performance summary, annual returns, best/worst full years, rebalance diagnostics, end-of-month drifted weights, aggregate diagnostics, company selection frequency, the first-rebalance raw-price walkthrough, stress results, and two sampled chart frames. The manifest hashes every frame, both calculation and verification helpers, the shared market helpers, notebook source, and the frozen input manifest. `data/provenance/momentum-verification.json` is its tracked copy.
+
+All signal and target-weight dates are retained, including pre-SPY formation history. Evaluated holdings and portfolio outputs begin at the first SPY-comparable allocation: initial wealth on 1993-01-29 and daily returns from 1993-02-01 to 2026-09-10. There are 8,460 shared daily returns and 404 holding months; September 2026 is partial. Best/worst calendar years exclude the partial first/final years. No selected quote was missing in this snapshot, so the conservative write-off fallback did not affect observed results.
+
+The existing `build_market_dashboard` command now loads **both** verified output sets and calls `scripts/build_momentum_dashboard.py` to attach the strategy section. Missing or stale momentum outputs fail the command; it cannot silently erase the completed strategy. It reuses the market section objects without changing their numbers, sources, observations or sampling. Market definitions in `METHODOLOGY.md` are preserved and distinct Momentum Strategy sections are appended from the reviewed notebook metadata.
+
+Momentum charts select already-calculated month-end observations, initial/final observations and each calendar year's daily drawdown minima for both series. No estimators run in the exporter or frontend. Python tests cross-check every published momentum metric, every numeric table cell and every chart coordinate/value against the reviewed frames. The guide reads its illustrative strategy/SPY CAGR directly from that snapshot. The v3 definition additionally requires the fixed rule, costs, frequency and evaluation dates; Python and TypeScript reject inconsistent formation periods and unsupported rule settings.
+
+For final local UI checks, build and start `web/`, run `npm run smoke`, and inspect `/momentum` and `/guide` at desktop, tablet and mobile widths. The new page is chapter 09; its optional video area has no media URL. Fresh CI clones lack ignored raw/reviewed caches, so cache-dependent research integration tests are explicitly skipped there; deterministic timing/accounting, schema and frontend tests still run. Exact research reruns on another machine require transfer of the frozen raw and reviewed cache directories and their manifests.

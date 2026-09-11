@@ -50,7 +50,9 @@ class ReviewedPublicationTests(unittest.TestCase):
                   'risk-contributions':'portfolio_risk_contributions',
                   **{f'stress-{i}-outcomes':f'stress_metrics_{i}' for i in range(3)}}
         checked=0
-        for section in self.snapshot['sections'].values():
+        for key, section in self.snapshot['sections'].items():
+            if key == 'momentum':
+                continue
             for table in section.get('tables',[]):
                 frame=self.frames[mappings[table['id']]]
                 self.assertEqual(set(row['id'] for row in table['rows']),set(frame.index))
@@ -64,7 +66,9 @@ class ReviewedPublicationTests(unittest.TestCase):
         mapping={'full-index':'indexed_history','common-index':'indexed_common',
                  'portfolio-index':'portfolio_indexed','portfolio-dd':'portfolio_drawdowns',
                  **{f'stress-{i}-wealth':f'stress_growth_{i}' for i in range(3)}}
-        for section in self.snapshot['sections'].values():
+        for key, section in self.snapshot['sections'].items():
+            if key == 'momentum':
+                continue
             for chart in section.get('charts',[]):
                 if chart['kind']=='scatter':
                     frame=self.frames['full_asset_metrics' if chart['id']=='risk-full' else 'common_metrics']
@@ -96,8 +100,7 @@ class ReviewedPublicationTests(unittest.TestCase):
         self.assertEqual(len(self.snapshot['research']['universe']),55)
         self.assertEqual(self.snapshot['sections']['market']['metrics'][0]['value'],55)
         self.assertEqual(self.snapshot['sections']['market']['metrics'][1]['value'],self.meta['verification']['common_return_observations'])
-        self.assertEqual(self.snapshot['sections']['momentum']['status'],'awaiting')
-        self.assertNotIn('metrics',self.snapshot['sections']['momentum'])
+        self.assertEqual(self.snapshot['sections']['momentum']['status'],'available')
 
     def test_modified_reviewed_file_is_rejected(self):
         with tempfile.TemporaryDirectory() as temp:

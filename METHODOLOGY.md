@@ -1,6 +1,6 @@
 # Research methodology
 
-Verified from `notebooks/01_market_exploration.ipynb`.
+Market research verified from `notebooks/01_market_exploration.ipynb`; the separate Momentum Strategy sections come from `notebooks/02_momentum_strategy.ipynb`.
 
 ## Yahoo Finance and adjusted prices
 
@@ -58,6 +58,22 @@ Global Financial Crisis: 2007-10-01 through 2009-03-31; COVID Crash: 2020-02-01 
 
 The selected surviving companies introduce survivorship and selection bias; delisted/failed companies are not represented. Listing dates and available histories differ. Yahoo adjustments, corporate actions, ticker histories and later data revisions can affect results; downloads were checked for structure and internal identities, not independently reconciled against exchange records. Unusually large historical moves are retained without automatic repair. Correlations and beta can change across regimes. The risk-free transformation and constant-weight frictionless portfolio are simplifying assumptions. Historical performance does not predict future results.
 
-## Strategy research remains pending
+## Momentum Strategy — definition
 
-Quantitative Strategy / Momentum awaits the user-authored notebooks/02_momentum_strategy.ipynb and review of its signals, timing, portfolio rules, costs and backtest outputs. No momentum results are included in the version 2 snapshot.
+Fixed 50-company universe from notebook 01; monthly trailing 12-month adjusted-price total return including the latest month; top 10 eligible companies, 10% target weight each, no skipped month or parameter tuning. Exact ties use alphabetical ticker order. Fixed adjusted units are held through the following month, so weights drift between monthly rebalances.
+
+## Momentum Strategy — eligibility and timing
+
+Use exact final observed prices of completed months, not last nonmissing quotes. Require 13 valid month-end prices and complete positive daily prices across the trailing year. Eligibility and rank use only information dated at or before formation. Assume frictionless allocation at the formation close and earn returns strictly afterward. Same-close signal and execution is a monthly idealization, not an executable fill guarantee. SPY must be observed at the initial formation close.
+
+## Momentum Strategy — missing observations
+
+No asset-price forward fill or hindsight replacement. At the first invalid held quote, mark that position to zero and keep it there for the remainder of the month. This is a severe fallback, not a measured delisting return. Missing SPY prices, complete portfolio loss, or fewer than ten eligible stocks after inception stop the run. The final incomplete month contributes observed returns using the previous signal.
+
+## Momentum Strategy — metrics and turnover
+
+Identical daily returns from 1993-02-01 through 2026-09-10; initial wealth 1 on 1993-01-29. Total return, daily mean × 252, calendar-time CAGR, sample daily volatility × square root of 252, covariance beta and Pearson correlation are calculated in Python. Sharpe uses the same aligned ^IRX transformation, same-date yield and asset-volatility denominator as notebook 01. Maximum drawdown includes initial wealth. One-way turnover is half the absolute target-minus-drifted-weight changes including cash; its recurring mean excludes initial allocation. Best/worst calendar years exclude partial years.
+
+## Momentum Strategy — limitations
+
+Present-day universe survivorship and selection bias; changing listing/history eligibility; no transaction costs, taxes, slippage or market impact; provider and corporate-action limitations; monthly close execution and distribution-reinvestment simplifications; no independent out-of-sample evidence or tuning. Historical performance is not a forecast or a claim of investment suitability.

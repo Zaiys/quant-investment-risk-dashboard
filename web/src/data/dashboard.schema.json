@@ -1,13 +1,16 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Quantitative investment research export v2",
+  "title": "Quantitative Investment & Risk Analysis \u2014 version 3",
   "type": "object",
   "properties": {
     "schemaVersion": {
-      "const": 2
+      "const": 3
     },
     "generatedAt": {
-      "type": ["string", "null"],
+      "type": [
+        "string",
+        "null"
+      ],
       "format": "date-time"
     },
     "sections": {
@@ -26,18 +29,7 @@
           "$ref": "#/definitions/section"
         },
         "momentum": {
-          "type": "object",
-          "properties": {
-            "status": {
-              "const": "awaiting"
-            },
-            "reason": {
-              "type": "string",
-              "minLength": 1
-            }
-          },
-          "required": ["status", "reason"],
-          "additionalProperties": false
+          "$ref": "#/definitions/momentumSection"
         },
         "correlation": {
           "$ref": "#/definitions/section"
@@ -81,7 +73,10 @@
                   "format": "date"
                 }
               },
-              "required": ["start", "end"],
+              "required": [
+                "start",
+                "end"
+              ],
               "additionalProperties": false
             },
             {
@@ -111,13 +106,22 @@
                 "format": "date"
               }
             },
-            "required": ["id", "name", "availableFrom", "availableTo"],
+            "required": [
+              "id",
+              "name",
+              "availableFrom",
+              "availableTo"
+            ],
             "additionalProperties": false
           },
           "minItems": 0
         }
       },
-      "required": ["updatedAt", "period", "universe"],
+      "required": [
+        "updatedAt",
+        "period",
+        "universe"
+      ],
       "additionalProperties": false
     },
     "methodology": {
@@ -133,7 +137,10 @@
               "minLength": 1
             }
           },
-          "required": ["status", "reason"],
+          "required": [
+            "status",
+            "reason"
+          ],
           "additionalProperties": false
         },
         {
@@ -163,13 +170,21 @@
                     "minLength": 1
                   }
                 },
-                "required": ["id", "title", "detail"],
+                "required": [
+                  "id",
+                  "title",
+                  "detail"
+                ],
                 "additionalProperties": false
               },
               "minItems": 1
             }
           },
-          "required": ["status", "source", "items"],
+          "required": [
+            "status",
+            "source",
+            "items"
+          ],
           "additionalProperties": false
         }
       ]
@@ -197,7 +212,10 @@
               "minLength": 1
             }
           },
-          "required": ["status", "reason"],
+          "required": [
+            "status",
+            "reason"
+          ],
           "additionalProperties": false
         },
         {
@@ -223,10 +241,17 @@
                     "minLength": 1
                   },
                   "value": {
-                    "type": ["number", "null"]
+                    "type": [
+                      "number",
+                      "null"
+                    ]
                   },
                   "unit": {
-                    "enum": ["number", "percent", "ratio"]
+                    "enum": [
+                      "number",
+                      "percent",
+                      "ratio"
+                    ]
                   },
                   "note": {
                     "type": "string",
@@ -241,7 +266,13 @@
                     "minLength": 1
                   }
                 },
-                "required": ["id", "label", "value", "unit", "note"],
+                "required": [
+                  "id",
+                  "label",
+                  "value",
+                  "unit",
+                  "note"
+                ],
                 "additionalProperties": false
               },
               "minItems": 0
@@ -264,7 +295,11 @@
                     "minLength": 1
                   },
                   "kind": {
-                    "enum": ["line", "bar", "scatter"]
+                    "enum": [
+                      "line",
+                      "bar",
+                      "scatter"
+                    ]
                   },
                   "xLabel": {
                     "type": "string",
@@ -275,10 +310,19 @@
                     "minLength": 1
                   },
                   "xUnit": {
-                    "enum": ["text", "number", "percent", "ratio"]
+                    "enum": [
+                      "text",
+                      "number",
+                      "percent",
+                      "ratio"
+                    ]
                   },
                   "unit": {
-                    "enum": ["number", "percent", "ratio"]
+                    "enum": [
+                      "number",
+                      "percent",
+                      "ratio"
+                    ]
                   },
                   "series": {
                     "type": "array",
@@ -299,13 +343,22 @@
                             "type": "object",
                             "properties": {
                               "x": {
-                                "type": ["string", "number"]
+                                "type": [
+                                  "string",
+                                  "number"
+                                ]
                               },
                               "y": {
-                                "type": ["number", "null"]
+                                "type": [
+                                  "number",
+                                  "null"
+                                ]
                               }
                             },
-                            "required": ["x", "y"],
+                            "required": [
+                              "x",
+                              "y"
+                            ],
                             "additionalProperties": false
                           },
                           "minItems": 1
@@ -315,7 +368,11 @@
                           "minLength": 1
                         }
                       },
-                      "required": ["id", "label", "points"],
+                      "required": [
+                        "id",
+                        "label",
+                        "points"
+                      ],
                       "additionalProperties": false
                     },
                     "minItems": 1
@@ -371,10 +428,19 @@
                           "minLength": 1
                         },
                         "unit": {
-                          "enum": ["text", "number", "percent", "ratio"]
+                          "enum": [
+                            "text",
+                            "number",
+                            "percent",
+                            "ratio"
+                          ]
                         }
                       },
-                      "required": ["key", "label", "unit"],
+                      "required": [
+                        "key",
+                        "label",
+                        "unit"
+                      ],
                       "additionalProperties": false
                     },
                     "minItems": 1
@@ -391,7 +457,11 @@
                         "cells": {
                           "type": "array",
                           "items": {
-                            "type": ["string", "number", "null"]
+                            "type": [
+                              "string",
+                              "number",
+                              "null"
+                            ]
                           },
                           "minItems": 1
                         },
@@ -400,7 +470,10 @@
                           "minLength": 1
                         }
                       },
-                      "required": ["id", "cells"],
+                      "required": [
+                        "id",
+                        "cells"
+                      ],
                       "additionalProperties": false
                     },
                     "minItems": 1
@@ -410,7 +483,13 @@
                     "minLength": 1
                   }
                 },
-                "required": ["id", "title", "description", "columns", "rows"],
+                "required": [
+                  "id",
+                  "title",
+                  "description",
+                  "columns",
+                  "rows"
+                ],
                 "additionalProperties": false
               },
               "minItems": 0
@@ -429,7 +508,10 @@
                     "minLength": 1
                   }
                 },
-                "required": ["id", "label"],
+                "required": [
+                  "id",
+                  "label"
+                ],
                 "additionalProperties": false
               },
               "minItems": 1
@@ -459,7 +541,10 @@
                         "format": "date"
                       }
                     },
-                    "required": ["start", "end"],
+                    "required": [
+                      "start",
+                      "end"
+                    ],
                     "additionalProperties": false
                   },
                   "notes": {
@@ -467,7 +552,12 @@
                     "minLength": 1
                   }
                 },
-                "required": ["id", "label", "period", "notes"],
+                "required": [
+                  "id",
+                  "label",
+                  "period",
+                  "notes"
+                ],
                 "additionalProperties": false
               },
               "minItems": 1
@@ -503,7 +593,10 @@
                           "minLength": 1
                         }
                       },
-                      "required": ["id", "label"],
+                      "required": [
+                        "id",
+                        "label"
+                      ],
                       "additionalProperties": false
                     },
                     "minItems": 1
@@ -513,7 +606,10 @@
                     "items": {
                       "type": "array",
                       "items": {
-                        "type": ["number", "null"],
+                        "type": [
+                          "number",
+                          "null"
+                        ],
                         "minimum": -1,
                         "maximum": 1
                       },
@@ -522,13 +618,25 @@
                     "minItems": 1
                   }
                 },
-                "required": ["id", "title", "description", "labels", "values"],
+                "required": [
+                  "id",
+                  "title",
+                  "description",
+                  "labels",
+                  "values"
+                ],
                 "additionalProperties": false
               },
               "minItems": 0
             }
           },
-          "required": ["status", "source", "metrics", "charts", "tables"],
+          "required": [
+            "status",
+            "source",
+            "metrics",
+            "charts",
+            "tables"
+          ],
           "additionalProperties": false,
           "anyOf": [
             {
@@ -556,7 +664,9 @@
               }
             },
             {
-              "required": ["matrices"],
+              "required": [
+                "matrices"
+              ],
               "properties": {
                 "matrices": {
                   "type": "array",
@@ -595,7 +705,10 @@
               "format": "date"
             }
           },
-          "required": ["start", "end"],
+          "required": [
+            "start",
+            "end"
+          ],
           "additionalProperties": false
         },
         "methodology": {
@@ -611,8 +724,166 @@
           "minItems": 0
         }
       },
-      "required": ["path", "label", "asOf", "period", "methodology", "notes"],
+      "required": [
+        "path",
+        "label",
+        "asOf",
+        "period",
+        "methodology",
+        "notes"
+      ],
       "additionalProperties": false
+    },
+    "momentumSection": {
+      "oneOf": [
+        {
+          "$ref": "#/definitions/section/oneOf/0"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "$ref": "#/definitions/section/oneOf/1/properties/status"
+            },
+            "source": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/source"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "path": {
+                      "const": "notebooks/02_momentum_strategy.ipynb"
+                    }
+                  }
+                }
+              ]
+            },
+            "metrics": {
+              "$ref": "#/definitions/section/oneOf/1/properties/metrics"
+            },
+            "charts": {
+              "$ref": "#/definitions/section/oneOf/1/properties/charts"
+            },
+            "tables": {
+              "$ref": "#/definitions/section/oneOf/1/properties/tables"
+            },
+            "entities": {
+              "$ref": "#/definitions/section/oneOf/1/properties/entities"
+            },
+            "scenarios": {
+              "$ref": "#/definitions/section/oneOf/1/properties/scenarios"
+            },
+            "matrices": {
+              "$ref": "#/definitions/section/oneOf/1/properties/matrices"
+            },
+            "definition": {
+              "type": "object",
+              "properties": {
+                "lookbackMonths": {
+                  "const": 12
+                },
+                "topN": {
+                  "const": 10
+                },
+                "rebalance": {
+                  "const": "monthly"
+                },
+                "weighting": {
+                  "const": "equal at formation; drift within month"
+                },
+                "transactionCosts": {
+                  "const": 0
+                },
+                "skipMonth": {
+                  "const": false
+                },
+                "initialWealthDate": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "firstReturnDate": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "lastReturnDate": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "dailyObservations": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "holdingMonths": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              },
+              "required": [
+                "lookbackMonths",
+                "topN",
+                "rebalance",
+                "weighting",
+                "transactionCosts",
+                "skipMonth",
+                "initialWealthDate",
+                "firstReturnDate",
+                "lastReturnDate",
+                "dailyObservations",
+                "holdingMonths"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "status",
+            "source",
+            "metrics",
+            "charts",
+            "tables",
+            "definition"
+          ],
+          "additionalProperties": false,
+          "anyOf": [
+            {
+              "properties": {
+                "metrics": {
+                  "minItems": 1,
+                  "type": "array"
+                }
+              }
+            },
+            {
+              "properties": {
+                "charts": {
+                  "minItems": 1,
+                  "type": "array"
+                }
+              }
+            },
+            {
+              "properties": {
+                "tables": {
+                  "minItems": 1,
+                  "type": "array"
+                }
+              }
+            },
+            {
+              "required": [
+                "matrices"
+              ],
+              "properties": {
+                "matrices": {
+                  "type": "array",
+                  "minItems": 1
+                }
+              }
+            }
+          ]
+        }
+      ]
     }
   }
 }

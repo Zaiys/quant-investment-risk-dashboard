@@ -8,12 +8,12 @@ const fixture = () =>
     readFileSync(new URL("./fixtures/available.json", import.meta.url), "utf8"),
   );
 describe("research handoff", () => {
-  it("validates the committed snapshot and keeps momentum UI-only", () => {
-    expect(parseDashboard(snapshot).sections.momentum.status).toBe("awaiting");
+  it("validates the committed snapshot and includes reviewed momentum", () => {
+    expect(parseDashboard(snapshot).sections.momentum.status).toBe("available");
   });
   it("accepts an empty snapshot without supplying fake metrics", () => {
     const data = parseDashboard({
-      schemaVersion: 2,
+      schemaVersion: 3,
       generatedAt: null,
       research: { updatedAt: null, period: null, universe: [] },
       methodology: { status: "awaiting", reason: "Awaiting source verification." },
@@ -43,7 +43,7 @@ describe("research handoff", () => {
       },
     ],
     [
-      "momentum data",
+      "momentum without its definition",
       (d: ReturnType<typeof fixture>) => {
         d.sections.momentum = d.sections.market;
       },

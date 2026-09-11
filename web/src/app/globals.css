@@ -1232,7 +1232,7 @@ td.empty-table-cell {
     --space: 3rem;
   }
   .chapter-nav {
-    grid-template-columns: repeat(8, minmax(0, 1fr));
+    grid-template-columns: repeat(9, minmax(0, 1fr));
     gap: 1rem;
   }
   .chapter-nav a {
@@ -1327,4 +1327,21 @@ td.empty-table-cell {
 }
 .measure-definitions .reference-note {
   grid-column: 1/-1;
+}
+
+.research-guide .documented-methodology > h3 {
+  margin-top: 1.75rem;
+}
+.research-guide .documented-methodology > p,
+.research-guide .limitations-note p + p {
+  margin-top: 0.75rem;
+}
+.research-guide ol li {
+  padding-left: 0.25rem;
+  margin-bottom: 0.8rem;
+}
+.research-guide ol a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }

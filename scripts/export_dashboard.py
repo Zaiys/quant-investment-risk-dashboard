@@ -14,7 +14,7 @@ from jsonschema import Draft7Validator, FormatChecker
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA_PATH = ROOT / "web/src/data/dashboard.schema.json"
 DEFAULT_OUTPUT = ROOT / "web/src/data/dashboard.json"
-ANALYSIS_KEYS = ("market", "risk-return", "correlation", "portfolio", "stress")
+ANALYSIS_KEYS = ("market", "risk-return", "correlation", "portfolio", "stress", "momentum")
 MOMENTUM = {
     "status": "awaiting",
     "reason": "Awaiting results from notebooks/02_momentum_strategy.ipynb. Strategy research is in progress.",
@@ -56,6 +56,12 @@ def validate_dashboard(payload: Any) -> dict[str, Any]:
             continue
         if payload["generatedAt"] is None:
             raise ValueError("Available results require generatedAt")
+        if key == "momentum":
+            definition = section['definition']
+            if not (definition['initialWealthDate'] < definition['firstReturnDate'] <= definition['lastReturnDate']):
+                raise ValueError('Momentum formation must precede evaluation returns')
+            if section['source']['period'] != {'start': definition['initialWealthDate'], 'end': definition['lastReturnDate']}:
+                raise ValueError('Momentum source period differs from definition')
         entity_ids = [entity["id"] for entity in section.get("entities", [])]
         scenario_ids = [scenario["id"] for scenario in section.get("scenarios", [])]
         _unique(entity_ids, "entity ID")
@@ -137,18 +143,18 @@ def write_dashboard(sections: Mapping[str, Any], output: str | Path = DEFAULT_OU
     """Package complete, precomputed sections. Omitted sections remain explicitly unavailable.
 
     This writes a full snapshot, not a merge. Supply all sections to retain.
-    Momentum results are intentionally rejected by the v2 contract.
+    Momentum requires its dedicated v3 definition and reviewed notebook source.
     """
     unknown = set(sections) - set(ANALYSIS_KEYS)
     if unknown:
         raise ValueError(f"Unsupported section keys: {', '.join(sorted(unknown))}")
     pending = {key: {"status": "awaiting", "reason": "Reviewed analysis outputs have not been exported."} for key in ANALYSIS_KEYS}
     payload = {
-        "schemaVersion": 2,
+        "schemaVersion": 3,
         "generatedAt": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
         "research": research if research is not None else {"updatedAt": None, "period": None, "universe": []},
         "methodology": methodology if methodology is not None else {"status": "awaiting", "reason": "Methodological assumptions have not been exported for review."},
-        "sections": {**pending, **sections, "momentum": MOMENTUM},
+        "sections": {**pending, "momentum": MOMENTUM, **sections},
     }
     return publish_snapshot(payload, output)
 

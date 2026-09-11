@@ -10,7 +10,7 @@ The canonical contract is `web/src/data/dashboard.schema.json` (JSON Schema draf
 
 A snapshot contains:
 
-- `schemaVersion`: exactly `2`.
+- `schemaVersion`: exactly `3`.
 - `generatedAt`: ISO 8601 timestamp including a time zone, or `null` before the first export. Available results require a timestamp.
 - `sections`: exactly `market`, `risk-return`, `correlation`, `portfolio`, `stress`, and `momentum`.
 
@@ -18,7 +18,7 @@ A missing section has `status: "awaiting"` and a plain-language `reason`. It has
 
 An available section has `status: "available"`, `source`, `metrics`, `charts`, and `tables`. It may also contain `matrices`. At least one widget array must be nonempty. Widget IDs must be unique within the section.
 
-Momentum accepts only the awaiting shape in version 2. The Python helper also rejects momentum as an input section. This is an intentional UI-only boundary until the separate research is reviewed.
+Version 3 accepts momentum as awaiting or as a dedicated available section. Available momentum requires `source.path = "notebooks/02_momentum_strategy.ipynb"` and `definition`, in addition to the ordinary widget arrays. The definition requires `lookbackMonths: 12`, `topN: 10`, `rebalance: "monthly"`, `weighting: "equal at formation; drift within month"`, `transactionCosts: 0`, `skipMonth: false`, `initialWealthDate`, `firstReturnDate`, `lastReturnDate`, `dailyObservations`, and `holdingMonths`. Counts are positive integers. Initial wealth must precede the first return; the source period must run from initial wealth through the last return. These are reviewed research choices for one specified experiment; unsupported alternatives require another deliberate contract change.
 
 ## Research record and methodology
 
@@ -116,6 +116,7 @@ write_dashboard({
     "correlation": correlation_section,
     "portfolio": portfolio_section,
     "stress": stress_section,
+    "momentum": reviewed_momentum_section,
 }, research=research_metadata, methodology=methodology_document)
 ```
 
@@ -123,7 +124,7 @@ The variables above are integration interfaces, not implemented research or inve
 
 The metadata variables are explicit reviewed dictionaries with the shapes above. Omitting either keyword argument publishes unknown research metadata or awaiting methodology, respectively.
 
-You may omit unavailable sections. The helper always writes a complete snapshot, so pass all sections you want to retain. It adds a current UTC export timestamp and fixes momentum to awaiting. It does not overwrite notebooks, and output targets must use `.json`.
+You may omit unavailable sections. The helper always writes a complete snapshot, so pass all sections you want to retain. It adds a current UTC export timestamp and marks any omitted section awaiting. It does not overwrite notebooks, and output targets must use `.json`.
 
 Alternatively, produce a complete JSON snapshot using your own adapter, then run:
 
@@ -134,20 +135,16 @@ Alternatively, produce a complete JSON snapshot using your own adapter, then run
 
 The second command validates before atomically replacing the app snapshot. It preserves the supplied export timestamp. The Next.js build validates again, then prerenders the pages. Publication requires committing the JSON and rebuilding or redeploying.
 
-## Version 2 migration
+## Version 3 migration
 
-Version 2 adds the correlation section, research record and methodology publication. A version 1 snapshot fails validation. Re-export through `write_dashboard` with the reviewed section values and explicit metadata, or add the new root fields and awaiting correlation section to a complete snapshot before validating. Do not populate missing dates, universe members, assumptions or results by inference. The repository had no published analysis values when version 2 was introduced.
+Version 3 extends version 2 with the dedicated reviewed momentum shape. Versions 1 and 2 now fail validation. Preserve all previously supplied market sections and research metadata, set the new version, and add either an awaiting momentum section or its full reviewed definition, source and outputs. Do not relabel a market section as momentum or invent missing results. JSON Schema, TypeScript types, Python packaging, semantic validation, tests and the route were updated together.
 
-## Evolution
-
-To add momentum later, first review the separately created `notebooks/02_momentum_strategy.ipynb` and agree its export definitions. Then update the JSON Schema, TypeScript types, Python helper, validation tests and momentum route together. The existing widget components can present its reviewed outputs. Changing formulas, assumptions or data periods remains Python research work.
-
-The schema deliberately contains no hardcoded universe, portfolio allocation, signal definition, lookback period, rebalancing schedule, cost assumption or performance estimate.
+The ordinary market schemas and financial estimators remain unchanged. Version 3 intentionally constrains momentum to the pre-specified rule; it is not a generic strategy optimizer. The beginner guide is a static editorial route, not another computed-results section. Its numeric example references the validated momentum metrics.
 
 ## Verified market adapter
 
-The market notebook now writes checked numeric tables to `data/reviewed/` through `scripts/research_outputs.py`. Run `python -m scripts.build_market_dashboard` to map those tables into this unchanged version 2 contract, or add `--check` to require exact agreement with the existing snapshot. The adapter performs presentation sampling of existing long-history points without computing financial estimators or rounding. All daily calculations remain in Python research.
+The market notebook now writes checked numeric tables to `data/reviewed/` through `scripts/research_outputs.py`. Run `python -m scripts.build_market_dashboard` to map those tables into the version 3 contract, or add `--check` to require exact agreement with the existing snapshot. The adapter performs presentation sampling of existing long-history points without computing financial estimators or rounding. All daily calculations remain in Python research.
 
-See [REPRODUCIBILITY.md](REPRODUCIBILITY.md) for cache provenance, execution, sampling frequency, output hashes and the independent published-value checks. Momentum remains awaiting data.
+See [REPRODUCIBILITY.md](REPRODUCIBILITY.md) for cache provenance, execution, sampling frequency, output hashes and the independent published-value checks. The same command now requires reviewed momentum outputs and attaches them using `scripts/build_momentum_dashboard.py`. Each market section is preserved. See `data/provenance/momentum-verification.json` for strategy provenance.
 
 The server reads and validates the original JSON text rather than importing it as a compiled JSON module. This prevents numeric-literal rewriting during the build. `/export` returns the original validated bytes; production smoke checks verify byte-for-byte equality.

@@ -61,7 +61,7 @@ export const sections: {
     question:
       "Can a clearly specified investment rule withstand a historical test?",
     description:
-      "Momentum research is in progress. Strategy definitions and results will be published after the analysis is reviewed.",
+      "A pre-specified monthly momentum rule, its comparison with SPY, and the limitations of the historical experiment.",
   },
 ];
 export const chapters = [
@@ -72,4 +72,5 @@ export const chapters = [
     label: s.nav,
   })),
   { href: "/methodology", number: "08", label: "Methodology" },
+  { href: "/guide", number: "09", label: "Research guide" },
 ];

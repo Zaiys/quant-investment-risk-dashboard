@@ -6,11 +6,11 @@ A research presentation layer for exploring markets, comparing risk and return, 
 
 ## Current research status
 
-The recovered market notebook has been executed and verified using frozen Yahoo Finance inputs. The version 2 dashboard snapshot covers 50 companies and five benchmark ETFs through **10 September 2026**. Full available histories begin as early as 2 January 1980; the shared 50-company period begins on 2 January 2013.
+The recovered market notebook has been executed and verified using frozen Yahoo Finance inputs. The version 3 dashboard snapshot covers 50 companies and five benchmark ETFs through **10 September 2026**. Full available histories begin as early as 2 January 1980; the shared 50-company period begins on 2 January 2013.
 
 Overview, Market Explorer, Risk vs Return, Diversification & Correlation, Portfolio Analysis, Stress Testing and Methodology are populated from reviewed Python outputs. See [METHODOLOGY.md](METHODOLOGY.md) for formulas and limitations, and [docs/REPRODUCIBILITY.md](docs/REPRODUCIBILITY.md) for input acquisition, cached execution and exact export checks.
 
-`notebooks/02_momentum_strategy.ipynb` is reserved for separately authored research. The dashboard does not create or modify that notebook. Its momentum page is UI-only, and version 2 of the export contract rejects momentum results.
+`notebooks/02_momentum_strategy.ipynb` is authored, executed and verified. Its single monthly top-ten, 12-month momentum rule uses the same frozen company prices and compares with SPY on identical dates from 1 February 1993 to 10 September 2026. Chapter 07 presents the reviewed outputs; chapter 09 explains the project for beginners. See [the momentum verification report](docs/MOMENTUM_VERIFICATION_REPORT.md). This is a biased surviving-company historical experiment, gross of trading costs, not predictive evidence.
 
 ## Application
 
@@ -22,8 +22,9 @@ Overview, Market Explorer, Risk vs Return, Diversification & Correlation, Portfo
 | 04 Diversification & Correlation | Interactive correlation matrices and period-specific relationships          |
 | 05 Portfolio Analysis            | Portfolio/SPY comparisons, weights and component risk contributions         |
 | 06 Stress Testing                | Historical scenario selection and exported portfolio/asset comparisons      |
-| 07 Quantitative Strategy         | Analysis-in-progress interface for the separate momentum notebook           |
+| 07 Quantitative Strategy         | Verified momentum performance, holdings, turnover and limitations           |
 | 08 Methodology & Limitations     | Published assumptions and an explicitly unverified review checklist         |
+| 09 Research Guide                | Beginner explanations, chapter reading route and an optional future video   |
 
 The presentation uses paper tones, ink-like text, restrained green accents and editorial typography. Each chapter has its own research question and layout. The methodology chapter distinguishes documented assumptions from questions that still need checking. The Global Financial Crisis, COVID crash and 2022 selloff use the exact windows documented in the verified notebook.
 
@@ -51,15 +52,15 @@ npm run build
 npm run start
 ```
 
-With the production server running, use `npm run smoke` in a second terminal inside `web/` to verify all eight chapter routes, the snapshot download and the 404 response.
+With the production server running, use `npm run smoke` in a second terminal inside `web/` to verify all nine chapter routes, the snapshot download and the 404 response.
 
 ## Architecture
 
 ```text
-notebooks/                     Verified market notebook and separate strategy research
+notebooks/                     Verified market and momentum notebooks
 scripts/market_data.py         Resumable Yahoo acquisition and checked offline loading
 scripts/run_market_research.py  Fresh-kernel market notebook execution
-scripts/build_market_dashboard.py  Adapter from verified tables to the existing v2 contract
+scripts/build_market_dashboard.py  Combined verified market/momentum adapter to v3
 data/provenance/               Tracked input, verification and snapshot hash records
 scripts/export_dashboard.py    Validation and atomic JSON publication; no finance logic
 requirements-dashboard.txt     Separate optional export-validation dependency
@@ -68,7 +69,7 @@ web/
   src/components/              Navigation, charts, metrics, provenance and sortable tables
   src/lib/                     Type definitions, validation and display formatting
   src/data/dashboard.schema.json  Shared versioned data contract
-  src/data/dashboard.json      Verified market analysis snapshot; momentum awaiting data
+  src/data/dashboard.json      Verified market and momentum analysis snapshot
   tests/                       Parsing/UI tests and isolated synthetic fixtures
   vercel.json                  Next.js deployment settings
   package-lock.json            Locked frontend dependencies
@@ -80,7 +81,7 @@ docs/DESIGN.md                  Research-specific design system and accessibilit
 .github/workflows/dashboard.yml  Automated validation on pushes and pull requests
 ```
 
-Next.js statically prerenders all eight chapters from the validated JSON snapshot. The `/export` route downloads the same snapshot. No database, login, live data service, trading execution or background calculation is required.
+Next.js statically prerenders all nine chapters from the validated JSON snapshot. The `/export` route downloads the same snapshot. No database, login, live data service, trading execution or background calculation is required.
 
 The browser formats numbers and arranges chart coordinates; it does not calculate returns, annualise volatility, estimate Sharpe ratios, construct weights, rebalance portfolios or simulate strategies. Those decisions belong to the Python research.
 
@@ -119,7 +120,7 @@ npm run build
 npm run typecheck
 ```
 
-Tests cover validation, source metadata, missing/non-finite values, dates, chart coordinate alignment, sorting, asset/scenario selection, correlation matrices, accessible chart values, atomic publication and the momentum guard. Test fixtures are explicitly synthetic and never imported by the application. ESLint 9 is pinned because the current Next.js React lint rules are incompatible with ESLint 10.
+Tests cover validation, source metadata, missing/non-finite values, dates, chart coordinate alignment, sorting, asset/scenario selection, correlation matrices, accessible chart values, atomic publication, momentum timing/accounting and the v3 strategy definition. Test fixtures are explicitly synthetic and never imported by the application. ESLint 9 is pinned because the current Next.js React lint rules are incompatible with ESLint 10.
 
 For an isolated visual test of populated components, run `npm run test:preview` in `web/` and open the printed local URL. The page is labelled as synthetic test data and does not change the production snapshot.
 
@@ -144,6 +145,6 @@ For a Git-connected project imported from the repository root, set **Root Direct
 
 The dashboard validates presentation structure, not financial correctness. A successful build does not verify investment methodology, data quality, statistical validity, or whether observation periods are comparable. Supply those definitions and limitations with each export.
 
-Momentum integration remains a separate change after the notebook and outputs are reviewed. It will require deliberately extending the contract and replacing the UI-only state; no strategy settings or performance results have been preselected.
+Momentum uses one pre-specified rule without parameter tuning. The notebook documents formation-close execution, missing-price write-offs, drift between monthly rebalances, universe selection bias, costs and the limits of historical inference.
 
-Version 2 adds explicit research metadata, methodology publication, correlation matrices and optional inspection controls. Version 1 snapshots must be re-exported with the new structure; no values or assumptions are inferred during migration.
+Version 3 preserves the market sections and deliberately adds a reviewed momentum definition. Earlier snapshot versions must be re-exported with the new structure; no values or assumptions are inferred during migration.

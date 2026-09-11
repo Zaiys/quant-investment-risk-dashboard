@@ -44,7 +44,11 @@ export default function Overview() {
             </div>
             <div>
               <dt>Strategy research</dt>
-              <dd>Momentum · in progress</dd>
+              <dd>
+                {dashboard.sections.momentum.status === "available"
+                  ? "Momentum · verified historical analysis"
+                  : "Momentum · awaiting research"}
+              </dd>
             </div>
             <div>
               <dt>Research last updated</dt>
@@ -173,6 +177,19 @@ export default function Overview() {
               <p>
                 Data definitions, comparison windows, assumptions and the
                 boundaries of the evidence.
+              </p>
+            </div>
+            <span className="index-arrow" aria-hidden="true">
+              ↗
+            </span>
+          </Link>
+          <Link href="/guide" className="index-entry">
+            <span className="index-number">09</span>
+            <div>
+              <h3>How to Read This Project</h3>
+              <p>
+                A beginner’s guide to the questions, measures and limits of the
+                evidence.
               </p>
             </div>
             <span className="index-arrow" aria-hidden="true">

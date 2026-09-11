@@ -1,7 +1,7 @@
 import Ajv from "ajv";
 import addFormats from "ajv-formats";
 import schema from "@/data/dashboard.schema.json";
-import type { Dashboard, Period, Source } from "./types";
+import type { AvailableMomentum, Dashboard, Period, Source } from "./types";
 const ajv = new Ajv({
   allErrors: true,
   strictNumbers: true,
@@ -48,6 +48,19 @@ export function parseDashboard(input: unknown): Dashboard {
     if (!input.generatedAt)
       throw new Error("Available results require generatedAt");
     source(section.source);
+    if (key === "momentum") {
+      const definition = (section as AvailableMomentum).definition;
+      if (!(
+        definition.initialWealthDate < definition.firstReturnDate &&
+        definition.firstReturnDate <= definition.lastReturnDate
+      ))
+        throw new Error("Momentum formation must precede evaluation returns");
+      if (
+        section.source.period.start !== definition.initialWealthDate ||
+        section.source.period.end !== definition.lastReturnDate
+      )
+        throw new Error("Momentum source period differs from definition");
+    }
     const entityIds = (section.entities ?? []).map((entity) => entity.id);
     const scenarioIds = (section.scenarios ?? []).map(
       (scenario) => scenario.id,

@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "generatedAt": "2024-02-01T12:00:00Z",
   "sections": {
     "market": {
@@ -202,17 +202,26 @@
           "rows": [
             {
               "id": "a",
-              "cells": ["Test A", 0.2],
+              "cells": [
+                "Test A",
+                0.2
+              ],
               "entityId": "a"
             },
             {
               "id": "b",
-              "cells": ["Test B", -0.1],
+              "cells": [
+                "Test B",
+                -0.1
+              ],
               "entityId": "b"
             },
             {
               "id": "c",
-              "cells": ["Missing", null]
+              "cells": [
+                "Missing",
+                null
+              ]
             }
           ]
         }
@@ -302,9 +311,21 @@
             }
           ],
           "values": [
-            [1, -0.4, null],
-            [-0.4, 1, 0.2],
-            [null, 0.2, 1]
+            [
+              1,
+              -0.4,
+              null
+            ],
+            [
+              -0.4,
+              1,
+              0.2
+            ],
+            [
+              null,
+              0.2,
+              1
+            ]
           ]
         }
       ]

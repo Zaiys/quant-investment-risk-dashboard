@@ -1,4 +1,4 @@
-"""Adapt verified notebook tables to dashboard v2. No financial estimators here."""
+"""Adapt verified notebook tables to dashboard v3. No financial estimators here."""
 from __future__ import annotations
 
 import argparse
@@ -180,7 +180,7 @@ def build_dashboard(frames, meta):
         chart=line_chart(identifier+'-wealth',name+' — wealth path',note+' Every daily observation is retained.',frames[f'stress_growth_{i}'],scenario=identifier,sample=False)
         chart['yLabel']='Wealth (initial value 1.0)'
         stress['charts'].append(chart)
-    return {'schemaVersion':2,'generatedAt':v['checked_at'],'research':{'updatedAt':v['checked_at'][:10],'period':full,
+    return {'schemaVersion':3,'generatedAt':v['checked_at'],'research':{'updatedAt':v['checked_at'][:10],'period':full,
             'universe':[{'id':t,'name':t,'availableFrom':history.loc[t,'first_date'],'availableTo':history.loc[t,'last_date']} for t in history.index]},
             'methodology':{'status':'available','source':source(meta,'Verified notebook definitions; see METHODOLOGY.md and data/provenance/research-verification.json.'),
                            'items':methodology_items(meta)},
@@ -199,6 +199,10 @@ def main():
     args=parser.parse_args()
     frames,meta=load_reviewed_outputs()
     payload=build_dashboard(frames,meta)
+    from scripts.momentum_outputs import load_outputs
+    from scripts.build_momentum_dashboard import attach_momentum
+    momentum_frames, momentum_meta = load_outputs()
+    payload = attach_momentum(payload, momentum_frames, momentum_meta)
     validate_dashboard(payload)
     output=ROOT/'web/src/data/dashboard.json'
     if args.check:
@@ -206,14 +210,15 @@ def main():
     else:
         publish_snapshot(payload,output)
         assert json.loads(output.read_text()) == payload
-        text='# Research methodology\n\nVerified from `notebooks/01_market_exploration.ipynb`.\n\n'
+        text='# Research methodology\n\nMarket research verified from `notebooks/01_market_exploration.ipynb`; the separate Momentum Strategy sections come from `notebooks/02_momentum_strategy.ipynb`.\n\n'
         text+='\n\n'.join('## '+item['title']+'\n\n'+item['detail'] for item in payload['methodology']['items'])+'\n'
         (ROOT/'METHODOLOGY.md').write_text(text)
     report={'checked_at':datetime.now(timezone.utc).isoformat(),'status':'exact agreement',
             'numeric_values':count_values(payload),'snapshot_sha256':sha256(output),
             'notebook_source_sha256':meta['notebook_source_sha256'],
+            'momentum_notebook_source_sha256':momentum_meta['notebook_source_sha256'],
             'sections':{key:value['status'] for key,value in payload['sections'].items()},
-            'chart_sampling':'Observed quarter ends plus first/last points and gap boundaries; stress daily. No interpolation or financial recomputation.'}
+            'chart_sampling':'Observed quarter ends plus first/last points and gap boundaries; stress daily. Momentum uses observed month ends plus initial/final dates and annual daily drawdown troughs. No interpolation or financial recomputation.'}
     (ROOT/'data/provenance/dashboard-crosscheck.json').write_text(json.dumps(report,indent=2)+'\n')
     print(json.dumps(report,indent=2))
 

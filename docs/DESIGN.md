@@ -20,7 +20,7 @@ Tokens live in `web/src/app/globals.css`.
 
 DM Sans carries body text, controls and uppercase metadata; Georgia carries editorial headings. Fonts are limited to these two families. DM Sans is bundled locally. Data values use tabular numerals. Corners are square, separators thin, and interactive focus is visible. There are no gradients, decorative illustrations, shadows or animated chart entrances.
 
-The page grid has twelve columns. Reading sections occupy narrower spans; plots and tables have wide areas. Layout begins as a single column, introduces split reading columns at 768px, and expands chapter navigation to eight columns at 1100px. At smaller widths, a labelled button opens the chapter navigation.
+The page grid has twelve columns. Reading sections occupy narrower spans; plots and tables have wide areas. Layout begins as a single column, introduces split reading columns at 768px, and expands chapter navigation to nine columns at 1100px. At smaller widths, a labelled button opens the chapter navigation.
 
 ## Chapter-specific decisions
 

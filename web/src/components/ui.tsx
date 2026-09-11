@@ -137,7 +137,7 @@ export function PageFooter() {
       <span>Quantitative Investment & Risk Analysis</span>
       <div>
         <Link href="/methodology">Methodology & limitations</Link>
-        <span>Research interface · v2</span>
+        <span>Research interface · v3</span>
       </div>
     </footer>
   );

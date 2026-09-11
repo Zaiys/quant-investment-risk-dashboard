@@ -27,7 +27,7 @@ These steps deploy the feature branch without merging it into `master`.
 3. Run `npx vercel link`. Choose the intended scope and create a project named `quant-investment-risk-dashboard`, or select the intended existing project. If asked where the code lives, choose `./` because the command is running inside `web/`.
 4. Confirm Next.js detection, Node.js **22.x**, install command **`npm ci`**, and build command **`npm run build`**. Leave the output directory at its Next.js default. No environment variables are needed.
 5. Run `npx vercel deploy --target=preview`.
-6. Open the returned deployment URL and verify `/`, `/market`, `/risk-return`, `/correlation`, `/portfolio`, `/stress`, `/momentum`, `/methodology`, and the `/export` download. Verify the deployment is labelled **Preview** in Vercel before sharing it as a preview.
+6. Open the returned deployment URL and verify `/`, `/market`, `/risk-return`, `/correlation`, `/portfolio`, `/stress`, `/momentum`, `/methodology`, `/guide`, and the `/export` download. Verify the deployment is labelled **Preview** in Vercel before sharing it as a preview.
 7. Review the feature branch separately. Do not promote or merge solely because deployment succeeded.
 
 Commands, from the repository root:
@@ -49,7 +49,7 @@ npx vercel deploy --target=preview
 4. Select **Next.js**, **Node.js 22.x**, **Install Command = `npm ci`**, and **Build Command = `npm run build`**. Leave output-directory override disabled. No files outside the root directory are required by the production app.
 5. Keep **Production Branch = `master`**. Other branches use preview deployments. The current `master` lacks `web/`, so it cannot build this frontend until the feature branch is reviewed and merged. The CLI preview path works before that merge.
 6. Open a pull request from `feature/vercel-dashboard` to `master`, review code and available deployment checks, and merge only after review.
-7. After an approved merge, Vercel builds `master` for production. Verify the eight chapters, the snapshot download and source notes, then replace the README live-demo placeholder with the actual production URL.
+7. After an approved merge, Vercel builds `master` for production. Verify the nine chapters, the snapshot download and source notes, then replace the README live-demo placeholder with the actual production URL.
 
 The GitHub workflow performs tests and builds; it does not merge or deploy. No production deployment, remote push, repository connection or domain change is performed by these setup files alone.
 

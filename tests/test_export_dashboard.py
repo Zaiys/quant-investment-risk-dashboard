@@ -38,8 +38,8 @@ class ExportTests(unittest.TestCase):
             self.assertEqual(result["sections"]["portfolio"]["status"], "awaiting")
             self.assertEqual(result["sections"]["momentum"]["status"], "awaiting")
 
-    def test_momentum_results_cannot_be_published(self):
-        with self.assertRaises(ValueError):
+    def test_momentum_requires_its_dedicated_definition_and_source(self):
+        with self.assertRaises(Exception):
             write_dashboard({"momentum": self.data["sections"]["market"]})
         self.data["sections"]["momentum"] = self.data["sections"]["market"]
         with self.assertRaises(Exception):
@@ -73,10 +73,10 @@ class ExportTests(unittest.TestCase):
                 with self.assertRaises(Exception):
                     validate_dashboard(data)
 
-    def test_actual_snapshot_is_valid_and_momentum_is_ui_only(self):
+    def test_actual_snapshot_is_valid_and_momentum_is_available(self):
         data = json.loads((ROOT / "web/src/data/dashboard.json").read_text())
         validate_dashboard(data)
-        self.assertEqual(data["sections"]["momentum"]["status"], "awaiting")
+        self.assertEqual(data["sections"]["momentum"]["status"], "available")
 
 
 class ExtendedContractTests(unittest.TestCase):

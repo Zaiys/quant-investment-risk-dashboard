@@ -4,6 +4,7 @@ import Link from "next/link";
 import { dashboard } from "@/lib/data";
 import { sections } from "@/lib/sections";
 import { PageHeading, PendingData, Status } from "@/components/ui";
+import { MomentumIntro } from "@/components/momentum-intro";
 import { AvailableAnalysis } from "@/components/available-analysis";
 import { ResearchView, AssetHistory } from "@/components/research-views";
 // Known chapters are prerendered; unknown names use the explicit notFound guard.
@@ -65,6 +66,10 @@ export default async function ResearchPage({
               window and can change across regimes.
             </p>
           )}
+          {config.key === "momentum" &&
+            dashboard.sections.momentum.status === "available" && (
+              <MomentumIntro section={dashboard.sections.momentum} />
+            )}
           <AvailableAnalysis section={data} />
           {config.key === "market" && (
             <AssetHistory research={dashboard.research} />

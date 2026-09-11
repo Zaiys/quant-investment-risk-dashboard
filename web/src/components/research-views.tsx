@@ -338,7 +338,7 @@ export function StrategyView() {
         </ol>
         <p>
           The current data contract reserves this chapter for reviewed outputs.
-          It does not accept momentum results yet.
+          Results appear only after the notebook and its structured outputs are verified.
         </p>
       </aside>
     </section>

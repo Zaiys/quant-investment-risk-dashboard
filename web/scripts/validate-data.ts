@@ -12,5 +12,5 @@ const available = Object.values(data.sections).filter(
   (section) => section.status === "available",
 ).length;
 console.log(
-  `Dashboard export valid: ${available} available research sections; momentum awaiting data.`,
+  `Dashboard export valid: ${available} available research sections; momentum ${data.sections.momentum.status}.`,
 );

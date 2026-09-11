@@ -79,7 +79,7 @@ export type ResearchMetadata = {
   }[];
 };
 export type Dashboard = {
-  schemaVersion: 2;
+  schemaVersion: 3;
   generatedAt: string | null;
   research: ResearchMetadata;
   methodology:
@@ -90,6 +90,22 @@ export type Dashboard = {
         items: { id: string; title: string; detail: string }[];
       };
   sections: Record<Exclude<SectionKey, "momentum">, Section> & {
-    momentum: AwaitingSection;
+    momentum: AwaitingSection | AvailableMomentum;
+  };
+};
+
+export type AvailableMomentum = AvailableSection & {
+  definition: {
+    lookbackMonths: 12;
+    topN: 10;
+    rebalance: "monthly";
+    weighting: "equal at formation; drift within month";
+    transactionCosts: 0;
+    skipMonth: false;
+    initialWealthDate: string;
+    firstReturnDate: string;
+    lastReturnDate: string;
+    dailyObservations: number;
+    holdingMonths: number;
   };
 };
