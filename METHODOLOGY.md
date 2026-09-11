@@ -74,6 +74,16 @@ No asset-price forward fill or hindsight replacement. At the first invalid held 
 
 Identical daily returns from 1993-02-01 through 2026-09-10; initial wealth 1 on 1993-01-29. Total return, daily mean × 252, calendar-time CAGR, sample daily volatility × square root of 252, covariance beta and Pearson correlation are calculated in Python. Sharpe uses the same aligned ^IRX transformation, same-date yield and asset-volatility denominator as notebook 01. Maximum drawdown includes initial wealth. One-way turnover is half the absolute target-minus-drifted-weight changes including cash; its recurring mean excludes initial allocation. Best/worst calendar years exclude partial years.
 
+## Momentum Strategy — robustness checks
+
+The verified zero-cost, formation-close strategy remains the baseline. Two separate robustness checks are added without changing the signal rule, lookback, top-10 selection or monthly rebalance frequency.
+
+**Transaction-cost sensitivity.** The same verified daily strategy returns are recalculated under 0, 5, 10 and 20 basis points of implementation cost per unit of the project's one-way turnover measure. The recorded initial cash-to-stock allocation is charged as well as recurring rebalances. A 10 bp assumption with 25% one-way turnover therefore applies a 2.5 bp portfolio drag at that rebalance. The cost is deducted multiplicatively before the first gross return of the holding month. This is a transparent sensitivity assumption, not an estimate of BlackRock, broker or market-specific execution costs.
+
+**Next-day-close execution sensitivity.** Company selections still use only the completed formation-close signal. Instead of assuming allocation at that same close, the sensitivity portfolio stays in cash through the next trading day's close, earns zero strategy return on that first holding day, then enters at that day's adjusted closing prices and holds fixed adjusted units for the rest of the month. SPY remains continuously invested on the original daily calendar. This deliberately includes the opportunity cost of waiting one day and isolates timing from transaction costs, which remain zero in this execution check. It is more conservative than the baseline but still does not model intraday fills, bid-ask spreads or slippage.
+
+These checks are sensitivity analyses, not parameter tuning. They must be interpreted alongside the baseline rather than substituted after observing which version produces the best result.
+
 ## Momentum Strategy — limitations
 
-Present-day universe survivorship and selection bias; changing listing/history eligibility; no transaction costs, taxes, slippage or market impact; provider and corporate-action limitations; monthly close execution and distribution-reinvestment simplifications; no independent out-of-sample evidence or tuning. Historical performance is not a forecast or a claim of investment suitability.
+Present-day universe survivorship and selection bias; changing listing/history eligibility; no transaction costs, taxes, slippage or market impact in the baseline; provider and corporate-action limitations; monthly close execution and distribution-reinvestment simplifications; no independent out-of-sample evidence or tuning. Historical performance is not a forecast or a claim of investment suitability. The added cost and next-day execution checks reduce two implementation assumptions but do not remove survivorship bias or make the backtest investable proof.
