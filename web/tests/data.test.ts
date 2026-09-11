@@ -15,8 +15,8 @@ describe("research handoff", () => {
     const data = parseDashboard({
       schemaVersion: 2,
       generatedAt: null,
-      research: snapshot.research,
-      methodology: snapshot.methodology,
+      research: { updatedAt: null, period: null, universe: [] },
+      methodology: { status: "awaiting", reason: "Awaiting source verification." },
       sections: Object.fromEntries(
         Object.keys(snapshot.sections).map((key) => [
           key,

@@ -27,11 +27,15 @@ for (const route of routes) {
 const exported = await fetch(new URL("/export", base));
 assert.equal(exported.status, 200);
 assert.match(exported.headers.get("content-disposition") ?? "", /attachment/);
-const expected = JSON.parse(
-  readFileSync(new URL("../src/data/dashboard.json", import.meta.url), "utf8"),
+const expectedText = readFileSync(
+  new URL("../src/data/dashboard.json", import.meta.url),
+  "utf8",
 );
+const downloadedText = await exported.text();
+assert.equal(downloadedText, expectedText, "Download must preserve exact source bytes");
+const expected = JSON.parse(expectedText);
 assert.deepEqual(
-  await exported.json(),
+  JSON.parse(downloadedText),
   expected,
   "Downloaded snapshot must match the published file",
 );

@@ -1,0 +1,16 @@
+{
+  "checked_at": "2026-09-11T10:39:55.271592+00:00",
+  "status": "exact agreement",
+  "numeric_values": 25264,
+  "snapshot_sha256": "3aad8edb4fa7afb2630c20c5b5e6f680aa25d3f6993fb8761fc55ca3f88c7a64",
+  "notebook_source_sha256": "ace00b8855f8aa28109ca914b2888cc134f9bea0f5fe6ab3a18eb1b785cda5a5",
+  "sections": {
+    "market": "available",
+    "risk-return": "available",
+    "correlation": "available",
+    "portfolio": "available",
+    "stress": "available",
+    "momentum": "awaiting"
+  },
+  "chart_sampling": "Observed quarter ends plus first/last points and gap boundaries; stress daily. No interpolation or financial recomputation."
+}

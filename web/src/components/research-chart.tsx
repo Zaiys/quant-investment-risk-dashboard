@@ -70,6 +70,7 @@ export function ResearchChart({ chart: original }: { chart: Chart }) {
   );
   const tooltip = (
     <Tooltip
+      wrapperStyle={{ pointerEvents: "auto", maxWidth: "100%" }}
       formatter={(value, _name, item) =>
         formatValue(
           typeof value === "number" ? value : null,
@@ -82,6 +83,8 @@ export function ResearchChart({ chart: original }: { chart: Chart }) {
         borderRadius: 0,
         border: "1px solid #dce3e9",
         fontSize: 14,
+        maxHeight: 240,
+        overflowY: "auto",
       }}
     />
   );
@@ -128,7 +131,7 @@ export function ResearchChart({ chart: original }: { chart: Chart }) {
               {xAxis}
               {yAxis}
               {tooltip}
-              <Legend />
+              <Legend wrapperStyle={{ maxHeight: 88, overflowY: "auto" }} />
               {chart.series.map((series, index) => (
                 <Scatter
                   key={series.id}
@@ -146,7 +149,7 @@ export function ResearchChart({ chart: original }: { chart: Chart }) {
               {xAxis}
               {yAxis}
               {tooltip}
-              <Legend />
+              <Legend wrapperStyle={{ maxHeight: 88, overflowY: "auto" }} />
               {chart.series.map((series, index) => (
                 <Bar
                   key={series.id}
@@ -164,7 +167,7 @@ export function ResearchChart({ chart: original }: { chart: Chart }) {
               {xAxis}
               {yAxis}
               {tooltip}
-              <Legend />
+              <Legend wrapperStyle={{ maxHeight: 88, overflowY: "auto" }} />
               {chart.series.map((series, index) => (
                 <Line
                   key={series.id}

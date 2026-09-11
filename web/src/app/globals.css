@@ -919,6 +919,7 @@ td.empty-table-cell {
 .chart {
   height: 19rem;
   width: 100%;
+  overflow: hidden;
   background: var(--surface);
   border: 1px solid var(--rule);
   padding: 0.75rem 0 0;
