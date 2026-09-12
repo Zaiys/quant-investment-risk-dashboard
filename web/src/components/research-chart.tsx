@@ -16,6 +16,7 @@ import {
 } from "recharts";
 import type { Chart } from "@/lib/types";
 import { formatValue } from "@/lib/format";
+import { ChartValues } from "./chart-values";
 const palette = ["#245548", "#353c3c", "#667069", "#496d60", "#71776f"];
 // Align coordinates for rendering only. Missing values stay null; no interpolation or finance calculations.
 export function alignSeries(chart: Chart) {
@@ -31,6 +32,7 @@ export function alignSeries(chart: Chart) {
 }
 export function ResearchChart({ chart: original }: { chart: Chart }) {
   const [seriesId, setSeriesId] = useState("");
+  const [valuesOpen, setValuesOpen] = useState(false);
   const chart = {
     ...original,
     series: seriesId
@@ -197,38 +199,29 @@ export function ResearchChart({ chart: original }: { chart: Chart }) {
         </ResponsiveContainer>
       </div>
       <div className="chart-axis-label">{chart.xLabel}</div>
-      <details className="chart-values">
+      <details
+        className="chart-values"
+        onToggle={(event) => setValuesOpen(event.currentTarget.open)}
+      >
         <summary>View chart values</summary>
-        <div
-          className="table-scroll"
-          role="region"
-          aria-label={`${chart.title} values`}
-          tabIndex={0}
-        >
-          <table>
-            <caption className="sr-only">{chart.title} values</caption>
-            <thead>
-              <tr>
-                <th scope="col">Series</th>
-                <th scope="col">{chart.xLabel}</th>
-                <th scope="col">{chart.yLabel}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {chart.series.flatMap((series) =>
-                series.points.map((point, index) => (
-                  <tr key={`${series.id}-${index}`}>
-                    <td>{series.label}</td>
-                    <td>{formatValue(point.x, chart.xUnit)}</td>
-                    <td className="numeric">
-                      {formatValue(point.y, chart.unit)}
-                    </td>
-                  </tr>
-                )),
-              )}
-            </tbody>
-          </table>
-        </div>
+        {valuesOpen && (
+          <ChartValues
+            key={JSON.stringify(chart.series.map((series) => series.id))}
+            chart={chart}
+          />
+        )}
+        <noscript>
+          <p>
+            <a
+              className="text-link"
+              href="/export"
+              download="research-snapshot.json"
+            >
+              Download the source values
+            </a>{" "}
+            to inspect the complete snapshot without JavaScript.
+          </p>
+        </noscript>
       </details>
     </section>
   );

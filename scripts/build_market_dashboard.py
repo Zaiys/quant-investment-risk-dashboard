@@ -121,8 +121,6 @@ def methodology_items(meta):
          '; '.join(f'{name}: {start} through {end}' for name,(start,end) in meta['stress_periods'].items())+'. Returns whose dates fall inside each inclusive window are compounded from initial wealth 1. Portfolio, SPY and constituent outcomes use identical dates; tables report compounded period return and minimum drawdown, not annualised returns. Actual first/last return dates and counts accompany each scenario.'},
         {'id':'limitations','title':'Limitations and uncertainty','detail':
          'The selected surviving companies introduce survivorship and selection bias; delisted/failed companies are not represented. Listing dates and available histories differ. Yahoo adjustments, corporate actions, ticker histories and later data revisions can affect results; downloads were checked for structure and internal identities, not independently reconciled against exchange records. Unusually large historical moves are retained without automatic repair. Correlations and beta can change across regimes. The risk-free transformation and constant-weight frictionless portfolio are simplifying assumptions. Historical performance does not predict future results.'},
-        {'id':'momentum','title':'Strategy research remains pending','detail':
-         'Quantitative Strategy / Momentum awaits the user-authored notebooks/02_momentum_strategy.ipynb and review of its signals, timing, portfolio rules, costs and backtest outputs. No momentum results are included in the version 2 snapshot.'},
     ]
 
 

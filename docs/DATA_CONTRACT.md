@@ -81,7 +81,7 @@ Each chart requires:
 
 Series IDs are unique. Within a series, x coordinates are unique. Line and bar series must contain the same x coordinates in the same order: align the already-computed observations in Python and represent missing observations as null. The chart preserves supplied order and uses straight line segments, without smoothing, financial transformations or filling gaps.
 
-Scatter plots require numeric x coordinates. Use one-point series to name individual assets when useful. Separate asset series may use the same x coordinate. Every chart exposes a collapsible table of its raw values for accessibility.
+Scatter plots require numeric x coordinates. Use one-point series to name individual assets when useful. Separate asset series may use the same x coordinate. Every chart exposes a collapsible table of its raw values for accessibility. Tables mount when opened and paginate in source order at 100 rows per page. The complete snapshot remains downloadable, including without JavaScript.
 
 ## Tables
 

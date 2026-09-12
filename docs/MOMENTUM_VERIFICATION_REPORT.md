@@ -1,8 +1,10 @@
 # Momentum research and project completion report
 
+Historical verification record for the initial momentum and guide addition. For the current source cleanup and preservation checks, see [PUBLICATION_CLEANUP.md](PUBLICATION_CLEANUP.md).
+
 This report records the original gross baseline verification. The subsequent sensitivity addition is documented in [the momentum robustness report](MOMENTUM_ROBUSTNESS_VERIFICATION_REPORT.md); the baseline results and limitations below remain unchanged.
 
-Verified 11 September 2026 on `feature/vercel-dashboard`, continuing from `cb1b896`. The completed research and website remain local. Nothing was pushed, merged or deployed. The project is ready for a user-approved Vercel preview.
+Verified 11 September 2026 on `feature/vercel-dashboard`, continuing from `cb1b896`. This record covers the local research and website verification at that revision.
 
 ## 1. Exact strategy
 
@@ -100,7 +102,7 @@ Existing selectors, sortable tables and accessible chart-value tables are reused
 
 `/guide`, chapter **09**, is titled **How to Read This Project**. It explains quantitative investment research, risk research, this project's questions, SPY as benchmark, total/arithmetic return versus CAGR, volatility, Sharpe, drawdown, correlation, beta, diversification, risk contribution, stress testing, momentum, backtesting, look-ahead bias, survivorship bias and why historical results are not forecasts.
 
-It supplies a beginner chapter order, instructions for inspection controls and source values, an example reading the directly exported strategy/SPY CAGR, and interview preparation guidance. The optional video area says **Video walkthrough coming later**, contains no invented URL or media, and can later hold an embed without changing the surrounding guide. The existing editorial style is preserved; navigation expands to nine chapters and the guide has scoped paragraph spacing.
+The guide supplies a beginner reading route, instructions for inspection controls and source values, and an example reading the directly exported strategy/SPY CAGR. Navigation includes nine chapters in the existing editorial style.
 
 Background references in the notebook/guide: [Kenneth French's momentum construction](https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/Data_Library/det_mom_factor_daily.html), [SPY fund objective](https://www.ssga.com/us/en/individual/etfs/state-street-spdr-sp-500-etf-trust-spy), and [SEC performance-claims bulletin](https://www.investor.gov/introduction-investing/general-resources/news-alerts/alerts-bulletins/investor-bulletins-47). These provide context, not project results; French's factor uses a different rule.
 
@@ -133,23 +135,23 @@ The full changed-file inventory for this task is listed at the end of this repor
 | Preservation against `cb1b896` | PASS: original notebooks/provenance byte-identical; five market sections and market definitions unchanged |
 | Whitespace/diff check | PASS |
 
-The automated CI configuration still uses Node 22 and Python 3.12. On fresh clones, local-cache-dependent tests are explicitly skipped; deterministic timing, exporter and frontend tests run. The local checks above included the frozen caches and did not skip any Python test. The misleading local `node@22` alias pointed to another major version, so final compatibility was verified using an actual temporary Node 22.23.2 runtime, without changing project dependencies or machine-wide settings.
+The automated CI configuration still uses Node 22 and Python 3.12. On fresh clones, local-cache-dependent tests are explicitly skipped; deterministic timing, exporter and frontend tests run. The local checks above included the frozen caches and did not skip any Python test. Compatibility was verified under Node 22.23.2.
 
 ## 12. Commits and repository state
 
 Implementation commit: **`a8551cc780fda397a0078b22b9e87b928e1614bf`** — Add verified monthly momentum research and beginner guide.
 
-This report and `data/provenance/momentum-site-review.json` are committed separately as the final verification record. Their commit hash is included in the task's completion message and can also be read from `git log -1 -- docs/MOMENTUM_VERIFICATION_REPORT.md`. Work remains on `feature/vercel-dashboard`; no push, merge to `master`, or deployment was performed.
+This report and `data/provenance/momentum-site-review.json` are committed separately as the final verification record. Their history is available through `git log -- docs/MOMENTUM_VERIFICATION_REPORT.md`. Work remains on `feature/vercel-dashboard`; no push, merge to `master`, or deployment was performed.
 
 ## 13. Vercel preview readiness
 
 **Ready for a user-approved preview.** The complete app builds under the documented Node 22 runtime, all nine routes and the download work, and the populated strategy and guide have been reviewed responsively. Vercel only needs the committed frontend and snapshot; it does not execute Python or require the ignored raw cache. Hosting account/project selection and the actual preview deployment remain future authorized actions. No production deployment or merge is implied.
 
-## 14. Before an interview walkthrough
+## 14. Tracing a rebalance
 
 Explain the research question and methodology before presenting the CAGR. Be able to trace the first rebalance from 1992/1993 raw adjusted prices to signals, ranking, ten target weights and February 1993 returns. Explain why 13 endpoints span 12 months, why monthly weights drift, why next-period availability must not drive selection, and why a closing-price signal is not proof of executable closing-price fills.
 
-Distinguish CAGR from arithmetic annualised return, and beta from correlation. Explain initial-wealth drawdowns and the approximate ^IRX Sharpe convention. Describe turnover as a measure of trading activity; no net-cost result was calculated. Emphasize that eliminating future-return leakage leaves substantial survivorship and selection bias intact. Present the work as a reproducible educational research exercise, without predictive or investment-suitability claims.
+Distinguish CAGR from arithmetic annualised return, and beta from correlation. Explain initial-wealth drawdowns and the approximate ^IRX Sharpe convention. Describe turnover as a measure of trading activity; this initial baseline record excludes costs; the subsequent robustness report documents separate cost and timing sensitivities. Emphasize that eliminating future-return leakage leaves substantial survivorship and selection bias intact. Present the work as a reproducible educational research exercise, without predictive or investment-suitability claims.
 
 The next walkthrough can start at notebook section 16, then trace the construction back through sections 4–11 and finish with the guide's result interpretation and limitations.
 

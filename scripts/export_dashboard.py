@@ -17,7 +17,7 @@ DEFAULT_OUTPUT = ROOT / "web/src/data/dashboard.json"
 ANALYSIS_KEYS = ("market", "risk-return", "correlation", "portfolio", "stress", "momentum")
 MOMENTUM = {
     "status": "awaiting",
-    "reason": "Awaiting results from notebooks/02_momentum_strategy.ipynb. Strategy research is in progress.",
+    "reason": "Reviewed results from notebooks/02_momentum_strategy.ipynb have not been included in this snapshot.",
 }
 
 

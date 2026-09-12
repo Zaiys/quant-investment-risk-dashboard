@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { dashboard } from "@/lib/data";
 import { sections } from "@/lib/sections";
+import { pageMetadata } from "@/lib/site";
 import { PageHeading, PendingData, Status } from "@/components/ui";
 import { MomentumIntro } from "@/components/momentum-intro";
 import { AvailableAnalysis } from "@/components/available-analysis";
@@ -19,10 +20,7 @@ export async function generateMetadata({
   const { section } = await params;
   const config = sections.find((item) => item.key === section);
   if (!config) notFound();
-  return {
-    title: config.title,
-    description: config.description,
-  };
+  return pageMetadata(config.title, config.description, `/${config.key}`);
 }
 export default async function ResearchPage({
   params,

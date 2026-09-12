@@ -14,12 +14,11 @@ export function Navigation() {
           <span>Quantitative Investment & Risk Analysis</span>
         </Link>
         <a
-          className="repository-link"
-          href="https://github.com/Zaiys/quant-investment-risk-dashboard"
-          target="_blank"
-          rel="noreferrer"
+          className="source-link"
+          href="/export"
+          download="research-snapshot.json"
         >
-          Source repository <span aria-hidden="true">↗</span>
+          Source values <span aria-hidden="true">↓</span>
         </a>
       </div>
       <div className="contents-bar">

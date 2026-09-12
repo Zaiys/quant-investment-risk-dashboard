@@ -58,12 +58,14 @@ describe("presentation components", () => {
   });
   it.each(section.charts)(
     "exposes accessible source values for $kind charts",
-    (chart) => {
+    async (chart) => {
       render(<ResearchChart chart={chart} />);
       expect(screen.getByRole("img")).toHaveAccessibleName(
         new RegExp(chart.title),
       );
-      expect(screen.getByText("View chart values")).toBeInTheDocument();
+      expect(screen.queryByRole("table")).not.toBeInTheDocument();
+      fireEvent.click(screen.getByText("View chart values"));
+      expect(await screen.findByRole("table")).toBeInTheDocument();
       expect(screen.getAllByText("Test series A").length).toBeGreaterThan(0);
     },
   );

@@ -141,7 +141,7 @@ def performance_summary(returns, wealth, daily_rf):
     return pd.DataFrame.from_dict(rows, orient='index')
 
 
-def calendar_returns(returns, initial_date):
+def calendar_returns(returns):
     """Include partial first/final years but flag them; extrema use full years only."""
     annual = (1 + returns).groupby(returns.index.year).prod() - 1
     annual.index = annual.index.astype(str)

@@ -1,14 +1,14 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/site";
 import Link from "next/link";
 import { PageHeading } from "@/components/ui";
 import { dashboard } from "@/lib/data";
 import { formatValue, formatDate } from "@/lib/format";
 
-export const metadata: Metadata = {
-  title: "Research Guide",
-  description:
-    "A beginner's guide to the questions, risk measures, historical experiments and limitations in this research project.",
-};
+export const metadata = pageMetadata(
+  "Research Guide",
+  "A beginner's guide to the questions, risk measures, historical experiments and limitations in this research project.",
+  "/guide",
+);
 
 const concepts = [
   [
@@ -69,7 +69,7 @@ export default function ResearchGuide() {
   return (
     <>
       <PageHeading
-        eyebrow="09 / Research guide"
+        eyebrow="01 / Research guide"
         title="How to Read This Project"
         description="Start with the question, follow the evidence, then examine what the result leaves unanswered."
       />
@@ -87,11 +87,6 @@ export default function ResearchGuide() {
           <p>
             <a href="#concepts" className="text-link">
               Understand the measures ↓
-            </a>
-          </p>
-          <p>
-            <a href="#video-walkthrough" className="text-link">
-              Video walkthrough ↓
             </a>
           </p>
         </aside>
@@ -236,26 +231,7 @@ export default function ResearchGuide() {
               universe is biased. The results describe what this specified
               calculation produced on these inputs.
             </p>
-            <p>
-              For an interview, explain the research question, information
-              timing, portfolio accounting and strongest limitation before
-              citing performance. Be comfortable saying what the study has not
-              established.
-            </p>
           </aside>
-          <section
-            id="video-walkthrough"
-            className="empty-figure"
-            aria-labelledby="video-title"
-          >
-            <h2 id="video-title">Video walkthrough</h2>
-            <div className="figure-unavailable">
-              <p>Video walkthrough coming later</p>
-              <span className="meta-label">
-                Optional companion to this written guide
-              </span>
-            </div>
-          </section>
           <p className="reference-note">
             Background reading:{" "}
             <a href="https://www.ssga.com/us/en/individual/etfs/state-street-spdr-sp-500-etf-trust-spy">

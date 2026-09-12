@@ -1,11 +1,11 @@
 {
-  "checked_at": "2026-09-12T14:22:51.740556+00:00",
+  "checked_at": "2026-09-12T15:00:17.410299+00:00",
   "status": "exact agreement",
   "numeric_values": 27754,
-  "snapshot_sha256": "bc2ea7f7bdcb5cf58c703b38126ae81d75eef83e1be3f4cecde03303ecc3b59d",
-  "notebook_source_sha256": "ace00b8855f8aa28109ca914b2888cc134f9bea0f5fe6ab3a18eb1b785cda5a5",
-  "momentum_notebook_source_sha256": "ec7cfbd43d65a728bf854bbadfb846b5618b4626d4f55246de1d1f8161b824dd",
-  "momentum_robustness_manifest_sha256": "89bf717a4389a0fb0810c9b4649e235c960d610a3fc6c4d28173767b503a39d7",
+  "snapshot_sha256": "5ad78f7fa1e2c36871a4d2a4e5daba51c38864881f03d5d399897ce5be1921d1",
+  "notebook_source_sha256": "36058bd703eb073b80b97eff16d653cd2151f1d4aae934a6c82e6d3957a336e6",
+  "momentum_notebook_source_sha256": "0eda770d02a427ebba1e318e160a1bf8bf66f94f84ce741b094e01939f650020",
+  "momentum_robustness_manifest_sha256": "c207974f4848f4acf6efd52c7066913198ec96375ebec39785819dbe969428b9",
   "sections": {
     "market": "available",
     "risk-return": "available",

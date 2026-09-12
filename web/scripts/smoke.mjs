@@ -23,6 +23,21 @@ for (const route of routes) {
     /SYNTHETIC PRESENTATION TEST/,
     `${route} must not include test fixtures`,
   );
+  assert.match(
+    html,
+    /<meta name="description"/,
+    `${route} needs a description`,
+  );
+  assert.ok(/property="og:image"/.test(html), `${route} needs a social image`);
+  assert.ok(
+    /name="twitter:image"/.test(html),
+    `${route} needs a Twitter image`,
+  );
+  if (route === "/guide")
+    assert.doesNotMatch(
+      html,
+      /Video walkthrough coming later|For an interview/,
+    );
   if (route === "/momentum") {
     assert.match(html, /Transaction-cost sensitivity/);
     assert.match(html, /Next-day-close execution sensitivity/);
@@ -40,7 +55,11 @@ const expectedText = readFileSync(
   "utf8",
 );
 const downloadedText = await exported.text();
-assert.equal(downloadedText, expectedText, "Download must preserve exact source bytes");
+assert.equal(
+  downloadedText,
+  expectedText,
+  "Download must preserve exact source bytes",
+);
 const expected = JSON.parse(expectedText);
 assert.deepEqual(
   JSON.parse(downloadedText),
@@ -51,3 +70,24 @@ console.log("PASS /export (snapshot and download headers)");
 const missing = await fetch(new URL("/unknown-research-view", base));
 assert.equal(missing.status, 404);
 console.log("PASS unknown route returns 404");
+
+for (const [route, contentType] of [
+  ["/robots.txt", "text/plain"],
+  ["/sitemap.xml", "application/xml"],
+  ["/opengraph-image", "image/png"],
+]) {
+  const response = await fetch(new URL(route, base));
+  assert.equal(response.status, 200, route);
+  assert.ok(
+    response.headers.get("content-type")?.startsWith(contentType),
+    `${route} content type`,
+  );
+  if (route === "/opengraph-image") {
+    const bytes = new Uint8Array(await response.arrayBuffer());
+    assert.deepEqual(
+      Array.from(bytes.slice(0, 8)),
+      [137, 80, 78, 71, 13, 10, 26, 10],
+    );
+  }
+  console.log(`PASS ${route}`);
+}

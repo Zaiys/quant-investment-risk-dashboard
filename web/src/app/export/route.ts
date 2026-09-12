@@ -4,7 +4,7 @@ export function GET() {
   return new Response(snapshotText, {
     headers: {
       "Content-Type": "application/json",
-      "Content-Disposition": 'attachment; filename="dashboard.json"',
+      "Content-Disposition": 'attachment; filename="research-snapshot.json"',
     },
   });
 }

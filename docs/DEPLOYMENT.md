@@ -49,9 +49,21 @@ npx vercel deploy --target=preview
 4. Select **Next.js**, **Node.js 22.x**, **Install Command = `npm ci`**, and **Build Command = `npm run build`**. Leave output-directory override disabled. No files outside the root directory are required by the production app.
 5. Keep **Production Branch = `master`**. Other branches use preview deployments. The current `master` lacks `web/`, so it cannot build this frontend until the feature branch is reviewed and merged. The CLI preview path works before that merge.
 6. Open a pull request from `feature/vercel-dashboard` to `master`, review code and available deployment checks, and merge only after review.
-7. After an approved merge, Vercel builds `master` for production. Verify the nine chapters, the snapshot download and source notes, then replace the README live-demo placeholder with the actual production URL.
+7. After an approved merge, Vercel builds `master` for production. Verify the nine chapters, the snapshot download and source notes, then add the verified production URL to the README.
 
 The GitHub workflow performs tests and builds; it does not merge or deploy. No production deployment, remote push, repository connection or domain change is performed by these setup files alone.
+
+## Publication metadata and source access
+
+Local builds and Vercel Preview/Development deployments emit `noindex, nofollow` metadata and `Disallow: /` in `robots.txt`. Their sitemap is empty. This controls indexing; it is not access protection. Use Vercel deployment protection when a preview should require authentication.
+
+Vercel Production builds use `VERCEL_PROJECT_PRODUCTION_URL` for canonical URLs and the nine-chapter sitemap. Ensure Vercel system environment variables are available to the build. To select a custom domain or publish on another host, set `SITE_URL` to that site's public HTTPS origin, without a path, credentials or query string. A Preview deployment remains non-indexable even if `SITE_URL` is set. Without a known production origin, the app keeps indexing disabled rather than publishing a guessed canonical URL.
+
+`/opengraph-image` generates the shared 1200 × 630 social image from the bundled DM Sans font. Each chapter supplies its own social title and description. Before public release, check canonical URLs, `robots.txt`, `sitemap.xml` and the social image on the actual production domain.
+
+The header's **Source values** link downloads the complete reviewed snapshot from `/export` as `research-snapshot.json`. It works without GitHub access. The previous repository URL did not resolve without authentication; repository visibility has not been changed. Add a source-code link only after its intended URL is accessible to the target audience. Repository publication is separate from a Vercel preview.
+
+Environment files matching `.env` and `.env.*` are ignored at every directory level; `.env.example` may be tracked only with non-secret example settings.
 
 ## Updates and rollback
 

@@ -1,5 +1,7 @@
 # Market research and dashboard verification report
 
+Historical verification record for the market-only version 2 snapshot. For the current source cleanup and preservation checks, see [PUBLICATION_CLEANUP.md](PUBLICATION_CLEANUP.md).
+
 Completed 11 September 2026 on `feature/vercel-dashboard`. The market notebook is verified and the existing version 2 dashboard is populated. No push, merge or deployment was performed.
 
 ## 1. Stable data
@@ -154,7 +156,7 @@ Local, untracked data artifacts: the frozen raw inputs and manifest, resumable p
 - `f63137b`: reproducible Yahoo acquisition and local cache.
 - `2bb3c64`: verified notebook and research corrections.
 - `3a135fc`: verified dashboard integration and precision/overflow fixes.
-- The methodology and this report are recorded in the final documentation commit; its hash is supplied in the completion message.
+- The methodology and this report are recorded in the final documentation commit; its history is available through Git.
 
 Original local `master` remains at `5a47b8fd843276d15d628a5544a2a98fba8dbc0c`. Its pre-existing deletion of `notebooks/moment_strategy.ipynb` and untracked `notebooks/02_moment_strategy.ipynb` were not changed. Fetch updated only the remote-tracking `origin/master` to the recovered commit. The existing feature worktree remained on its own branch throughout.
 
@@ -164,4 +166,4 @@ Original local `master` remains at `5a47b8fd843276d15d628a5544a2a98fba8dbc0c`. I
 
 ## 12. Preview readiness
 
-**Ready for a user-approved Vercel preview deployment.** The populated production build, data provenance, precision checks and local review pass. No push, merge, preview deployment or production deployment was performed. The running local review is available at [http://127.0.0.1:3002/portfolio](http://127.0.0.1:3002/portfolio). Vercel account/project linking and the deployment itself remain untested until authorized.
+**Ready for a user-approved Vercel preview deployment.** The populated production build, data provenance, precision checks and local review pass. No push, merge, preview deployment or production deployment was performed. Vercel account/project linking and the deployment itself remain untested until authorized.

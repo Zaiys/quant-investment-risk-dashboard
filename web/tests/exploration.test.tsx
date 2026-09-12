@@ -53,11 +53,13 @@ describe("research inspection", () => {
       "Showing matching records",
     );
   });
-  it("lets a visitor inspect a series without rescaling or rebasing it", () => {
+  it("lets a visitor inspect a series without rescaling or rebasing it", async () => {
     render(<ResearchChart chart={market.charts[0]} />);
     fireEvent.change(screen.getByLabelText("Inspect series"), {
       target: { value: "test-b" },
     });
+    fireEvent.click(screen.getByText("View chart values"));
+    await screen.findByRole("table");
     expect(
       within(screen.getByRole("table")).queryByText("Test series A"),
     ).not.toBeInTheDocument();

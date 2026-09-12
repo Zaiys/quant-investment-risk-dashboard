@@ -2,6 +2,11 @@ import Link from "next/link";
 import { dashboard } from "@/lib/data";
 import { sections } from "@/lib/sections";
 import { formatDate } from "@/lib/format";
+import { pageMetadata, siteTitle, siteDescription } from "@/lib/site";
+export const metadata = {
+  ...pageMetadata(siteTitle, siteDescription, "/"),
+  title: { absolute: siteTitle },
+};
 export default function Overview() {
   const { research, methodology } = dashboard;
   return (
@@ -9,7 +14,7 @@ export default function Overview() {
       <section className="cover grid-12">
         <div className="cover-main">
           <div className="meta-label cover-kicker">
-            01 / Overview <span>Self-directed research project</span>
+            02 / Overview <span>Self-directed research project</span>
           </div>
           <h1>
             Quantitative
@@ -102,9 +107,8 @@ export default function Overview() {
         <aside className="publication-note">
           <span className="meta-label">Publication note</span>
           <p>
-            The local market notebook and methodology document are currently
-            empty. No financial results are presented until the underlying
-            analysis is available and its outputs are verified.
+            No reviewed research snapshot is available. Financial results appear
+            after the analysis has been exported and verified.
           </p>
         </aside>
       )}
@@ -147,6 +151,19 @@ export default function Overview() {
             <span className="meta-label">Navigate the analysis</span>
             <h2>Research chapters</h2>
           </div>
+          <Link href="/guide" className="index-entry">
+            <span className="index-number">01</span>
+            <div>
+              <h3>How to Read This Project</h3>
+              <p>
+                A beginner’s guide to the questions, measures and limits of the
+                evidence.
+              </p>
+            </div>
+            <span className="index-arrow" aria-hidden="true">
+              ↗
+            </span>
+          </Link>
           {sections.map((section) => (
             <Link
               href={`/${section.key}`}
@@ -171,25 +188,12 @@ export default function Overview() {
             </Link>
           ))}
           <Link href="/methodology" className="index-entry">
-            <span className="index-number">08</span>
+            <span className="index-number">09</span>
             <div>
               <h3>Methodology & Limitations</h3>
               <p>
                 Data definitions, comparison windows, assumptions and the
                 boundaries of the evidence.
-              </p>
-            </div>
-            <span className="index-arrow" aria-hidden="true">
-              ↗
-            </span>
-          </Link>
-          <Link href="/guide" className="index-entry">
-            <span className="index-number">09</span>
-            <div>
-              <h3>How to Read This Project</h3>
-              <p>
-                A beginner’s guide to the questions, measures and limits of the
-                evidence.
               </p>
             </div>
             <span className="index-arrow" aria-hidden="true">

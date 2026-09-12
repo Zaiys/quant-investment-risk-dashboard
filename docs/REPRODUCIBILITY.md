@@ -1,6 +1,6 @@
 # Reproducing the verified market and momentum analysis
 
-The recovered source is preserved at commit `c9fd6cc15537cdd5a5c23a4b67ed260502d4d407`. Research work is on `feature/vercel-dashboard`; the original checkout and its user-authored momentum work are separate. No merge or deployment is part of this workflow.
+The recovered source is preserved at commit `c9fd6cc15537cdd5a5c23a4b67ed260502d4d407`. The market and momentum notebooks use the same frozen input cache.
 
 ## Data and execution
 
@@ -33,7 +33,7 @@ The runner executes only `notebooks/01_market_exploration.ipynb` from top to bot
 
 `scripts/build_market_dashboard.py` reads the verified tables, rejects stale source or changed output files, maps finite scalar values without rounding, and publishes version 3 through the existing `scripts/export_dashboard.py` validator. No financial estimators are implemented in the adapter or TypeScript. It also writes `METHODOLOGY.md` from the same reviewed metadata used in the website.
 
-Long-history chart exports contain actual observed quarter ends, every series' first/final valid observations, and gap boundaries if present. The adapter selects existing values only. Stress curves retain daily observations. All estimates and drawdown extrema use full daily data. The full daily indexed series are retained in local reviewed Parquet files. This avoids turning the finished website's accessible chart tables into hundreds of thousands of rows; the sampling frequency is explicit on each chart.
+Long-history chart exports contain actual observed quarter ends, every series' first/final valid observations, and gap boundaries if present. The adapter selects existing values only. Stress curves retain daily observations. All estimates and drawdown extrema use full daily data. The full daily indexed series are retained in local reviewed Parquet files. This avoids turning the finished website's accessible chart tables into hundreds of thousands of rows; the sampling frequency is explicit on each chart. Website chart-value tables mount when opened and show 100 rows per page; pagination does not change the exported observations.
 
 The snapshot retains the notebook's separation between individual histories and the 50-company common period. It preserves null SPY beta, because the original asset beta table excludes SPY itself. Momentum is supplied separately from the reviewed notebook 02 outputs. The server reads the original JSON text and parses it at runtime, avoiding the build tool’s numeric-literal rewriting. The snapshot download returns that validated source text byte for byte. Regression tests cover this exact-value boundary. Long legends/tooltips are bounded within the existing chart panels so the full asset universe remains usable at mobile widths; the design is preserved; the version 3 schema adds a dedicated momentum definition.
 
@@ -77,7 +77,7 @@ The existing `build_market_dashboard` command now loads the verified market, bas
 
 Momentum charts select already-calculated month-end observations, initial/final observations and each calendar year's daily drawdown minima for both series. No estimators run in the exporter or frontend. Python tests cross-check every published momentum metric, every numeric table cell and every chart coordinate/value against the reviewed frames. The guide reads its illustrative strategy/SPY CAGR directly from that snapshot. The v3 definition additionally requires the fixed rule, costs, frequency and evaluation dates; Python and TypeScript reject inconsistent formation periods and unsupported rule settings.
 
-For final local UI checks, build and start `web/`, run `npm run smoke`, and inspect `/momentum` and `/guide` at desktop, tablet and mobile widths. The new page is chapter 09; its optional video area has no media URL. Fresh CI clones lack ignored raw/reviewed caches, so cache-dependent research integration tests are explicitly skipped there; deterministic timing/accounting, schema and frontend tests still run. Exact research reruns on another machine require transfer of the frozen raw and reviewed cache directories and their manifests.
+For final local UI checks, build and start `web/`, run `npm run smoke`, and inspect `/momentum` and `/guide` at desktop, tablet and mobile widths. The Research Guide is chapter 01; notebook filenames retain their research numbering. Fresh CI clones lack ignored raw/reviewed caches, so cache-dependent research integration tests are explicitly skipped there; deterministic timing/accounting, schema and frontend tests still run. Exact research reruns on another machine require transfer of the frozen raw and reviewed cache directories and their manifests.
 
 ## Momentum robustness — existing frozen baseline
 

@@ -2,23 +2,27 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { Navigation } from "@/components/navigation";
 import { PageFooter } from "@/components/ui";
+import { publication, siteTitle, siteDescription } from "@/lib/site";
 import "@fontsource/dm-sans/400.css";
 import "@fontsource/dm-sans/500.css";
 import "@fontsource/dm-sans/600.css";
 import "@fontsource/dm-sans/700.css";
 import "./globals.css";
 export const metadata: Metadata = {
-  title: {
-    default: "Quantitative Investment & Risk Analysis",
-    template: "%s | Quantitative Investment & Risk Analysis",
-  },
-  description:
-    "A self-directed quantitative finance research project investigating historical asset performance, portfolio risk, diversification and investment strategies.",
+  metadataBase: publication.metadataBase,
+  title: { default: siteTitle, template: `%s | ${siteTitle}` },
+  description: siteDescription,
+  robots: { index: publication.indexable, follow: publication.indexable },
   openGraph: {
     type: "website",
-    title: "Quantitative Investment & Risk Analysis",
-    description:
-      "Historical asset performance, portfolio risk and diversification. Research, methodology and limitations.",
+    siteName: siteTitle,
+    title: siteTitle,
+    description: siteDescription,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteTitle,
+    description: siteDescription,
   },
 };
 export default function RootLayout({ children }: { children: ReactNode }) {

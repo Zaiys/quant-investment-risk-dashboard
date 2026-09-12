@@ -1,7 +1,7 @@
 {
   "verification": {
     "status": "verified",
-    "checked_at": "2026-09-12T14:22:39.404313+00:00",
+    "checked_at": "2026-09-12T14:54:31.306084+00:00",
     "runtime": {
       "python": "3.12.14",
       "numpy": "2.5.3",
@@ -133,8 +133,8 @@
       "detail": "These are separately labelled sensitivity analyses, not baseline replacements, parameter tuning or a combined timing-and-cost model. The original 12-month rule, including the latest month, is preserved. The surviving-company universe, survivorship and selection bias, provider limitations and absence of independent out-of-sample evidence are unchanged. These checks do not establish investability or predict future performance. CAGR differences are percentage points, not relative percentage changes."
     }
   ],
-  "baseline_notebook_sha256": "ec7cfbd43d65a728bf854bbadfb846b5618b4626d4f55246de1d1f8161b824dd",
-  "baseline_manifest_sha256": "3a72f61505491ab2222ca1463efb45a7872dfb582408a7816b3c220f717051af",
+  "baseline_notebook_sha256": "0eda770d02a427ebba1e318e160a1bf8bf66f94f84ce741b094e01939f650020",
+  "baseline_manifest_sha256": "4ab85f6c2ab3ce49d02a5f8c646f504da055ec1d30ae1a33349168a58d09c664",
   "baseline_frames": {
     "monthly": "2b9ab74c291d4dfd99eabc5b35a4ed372ab971f995ab6e81e21585cf21bdc19f",
     "signals": "7a8951215904b936d8ded198ca574633b022cc9da214c5e18f43d441dabe85c6",

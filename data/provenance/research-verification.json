@@ -1,7 +1,7 @@
 {
   "verification": {
     "status": "verified",
-    "checked_at": "2026-09-11T10:28:30.863858+00:00",
+    "checked_at": "2026-09-12T14:54:23.156348+00:00",
     "price_period": {
       "start": "1980-01-02",
       "end": "2026-09-10"
@@ -1403,7 +1403,7 @@
       "2022-12-31"
     ]
   },
-  "notebook_source_sha256": "ace00b8855f8aa28109ca914b2888cc134f9bea0f5fe6ab3a18eb1b785cda5a5",
+  "notebook_source_sha256": "36058bd703eb073b80b97eff16d653cd2151f1d4aae934a6c82e6d3957a336e6",
   "research_helper_sha256": {
     "market_data.py": "3f1e88a4d39d28268a08905ca062e5ef16202085d495053a6914dabd0f5aa476",
     "research_checks.py": "c23c3583b9aeb6e994fe6f2b4700d1e714ca0500881b1ae73118578c5efb1ca3",

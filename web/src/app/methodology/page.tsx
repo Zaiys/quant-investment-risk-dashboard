@@ -1,18 +1,18 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/site";
 import { dashboard } from "@/lib/data";
 import { methodologyChecks } from "@/lib/research-notes";
 import { PageHeading, Provenance } from "@/components/ui";
-export const metadata: Metadata = {
-  title: "Methodology & Limitations",
-  description:
-    "Data definitions, observation windows, risk-free-rate assumptions and limitations of the quantitative investment research.",
-};
+export const metadata = pageMetadata(
+  "Methodology & Limitations",
+  "Data definitions, observation windows, risk-free-rate assumptions and limitations of the quantitative investment research.",
+  "/methodology",
+);
 export default function Methodology() {
   const method = dashboard.methodology;
   return (
     <>
       <PageHeading
-        eyebrow="08 / Methodology & limitations"
+        eyebrow="09 / Methodology & limitations"
         title="Methodology & Limitations"
         description="A result is only interpretable alongside the data, definitions and assumptions that produced it."
         action={

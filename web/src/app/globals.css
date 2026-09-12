@@ -146,12 +146,12 @@ main,
   color: var(--muted);
   margin-top: 0.4rem;
 }
-.repository-link {
+.source-link {
   font-size: 0.75rem;
   white-space: nowrap;
   color: var(--accent);
 }
-.repository-link span {
+.source-link span {
   padding-left: 0.25rem;
 }
 .contents-bar {
@@ -1088,7 +1088,7 @@ td.empty-table-cell {
   .wordmark span {
     display: block;
   }
-  .repository-link {
+  .source-link {
     font-size: 0.875rem;
   }
   .contents-bar {
@@ -1348,4 +1348,28 @@ td.empty-table-cell {
   color: var(--accent);
   text-decoration: underline;
   text-underline-offset: 3px;
+}
+
+.chart-values-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-block: 0.75rem;
+  font-size: 0.875rem;
+}
+.chart-values-controls > div {
+  display: flex;
+  gap: 0.75rem;
+}
+.chart-values-controls button {
+  background: var(--surface);
+  border: 1px solid var(--rule-strong);
+  padding: 0.5rem 0.75rem;
+  min-height: 2.75rem;
+}
+.chart-values-controls button:disabled {
+  color: var(--muted);
+  border-color: var(--rule);
 }

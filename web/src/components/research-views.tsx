@@ -176,7 +176,7 @@ export function RiskView() {
           >
             CFA Institute on investment risk
           </a>
-          . The project’s precise definitions still require verification.
+          . See the methodology for the project’s precise definitions.
         </p>
       </div>
     </>
@@ -267,9 +267,8 @@ export function StressView() {
         Did diversification behave differently across market regimes?
       </p>
       <p className="reading-column stress-intro">
-        The requested comparison covers three historical episodes. Their exact
-        start and end dates, constituent coverage and measured outcomes remain
-        unverified in the current repository.
+        The comparison covers three historical episodes. Exported results
+        include their exact dates, constituent coverage and measured outcomes.
       </p>
       <div className="stress-register">
         {[
@@ -310,21 +309,20 @@ export function StrategyView() {
   return (
     <section className="strategy-notebook grid-12">
       <div className="strategy-main">
-        <span className="meta-label">Notebook 02 / Analysis in progress</span>
+        <span className="meta-label">Notebook 02 / Results unavailable</span>
         <h2>
           Momentum strategy:
           <br />
-          analysis in progress.
+          results unavailable.
         </h2>
         <p>
-          The momentum strategy is being developed separately. Its signal
-          construction, portfolio rules and evaluation method will be documented
-          in the research notebook.
+          This snapshot does not contain reviewed momentum results. The research
+          notebook documents the signal, portfolio rules and evaluation method.
         </p>
         <code>notebooks/02_momentum_strategy.ipynb</code>
         <p className="strategy-status">
-          No signals, holdings, backtest curves or performance results have been
-          supplied.
+          Signals, holdings, backtest curves and performance results appear when
+          a reviewed strategy snapshot is supplied.
         </p>
       </div>
       <aside className="strategy-questions">
@@ -338,7 +336,8 @@ export function StrategyView() {
         </ol>
         <p>
           The current data contract reserves this chapter for reviewed outputs.
-          Results appear only after the notebook and its structured outputs are verified.
+          Results appear only after the notebook and its structured outputs are
+          verified.
         </p>
       </aside>
     </section>

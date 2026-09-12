@@ -74,7 +74,7 @@ describe("reviewed momentum", () => {
       screen.getByRole("link", { name: /research guide/ }),
     ).toHaveAttribute("href", "/guide");
   });
-  it("uses the reviewed CAGR in the guide and leaves video explicitly unavailable", () => {
+  it("uses the reviewed CAGR in the introductory guide", () => {
     render(<ResearchGuide />);
     const section = parseDashboard(snapshot()).sections.momentum;
     if (section.status !== "available")
@@ -90,10 +90,21 @@ describe("reviewed momentum", () => {
       ),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("Video walkthrough coming later"),
-    ).toBeInTheDocument();
+      screen.queryByText(/Video walkthrough coming later|For an interview/),
+    ).not.toBeInTheDocument();
     expect(document.querySelector("video, iframe")).toBeNull();
-    expect(chapters.some((chapter) => chapter.href === "/guide")).toBe(true);
+    expect(chapters[0]).toMatchObject({ href: "/guide", number: "01" });
+    expect(chapters.map((chapter) => chapter.number)).toEqual([
+      "01",
+      "02",
+      "03",
+      "04",
+      "05",
+      "06",
+      "07",
+      "08",
+      "09",
+    ]);
     expect(
       screen.getByRole("link", { name: "Quantitative Strategy" }),
     ).toHaveAttribute("href", "/momentum");
@@ -194,9 +205,7 @@ describe("reviewed momentum", () => {
         });
       });
     }
-    fireEvent.click(
-      within(costs).getByRole("button", { name: /^CAGR$/ }),
-    );
+    fireEvent.click(within(costs).getByRole("button", { name: /^CAGR$/ }));
     expect(within(costs).getAllByRole("row")[1]).toHaveTextContent("20 bps");
     expect(section).toEqual(before);
     expect(section.definition.transactionCosts).toBe(0);

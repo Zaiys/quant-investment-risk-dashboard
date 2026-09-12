@@ -9,7 +9,7 @@ export const sections: {
 }[] = [
   {
     key: "market",
-    number: "02",
+    number: "03",
     title: "Market Explorer",
     nav: "Market explorer",
     question:
@@ -19,7 +19,7 @@ export const sections: {
   },
   {
     key: "risk-return",
-    number: "03",
+    number: "04",
     title: "Risk vs Return",
     nav: "Risk vs return",
     question: "What risk accompanied the observed returns?",
@@ -28,7 +28,7 @@ export const sections: {
   },
   {
     key: "correlation",
-    number: "04",
+    number: "05",
     title: "Diversification & Correlation",
     nav: "Diversification",
     question: "Which relationships persist, and which depend on the period?",
@@ -37,7 +37,7 @@ export const sections: {
   },
   {
     key: "portfolio",
-    number: "05",
+    number: "06",
     title: "Portfolio Analysis",
     nav: "Portfolio",
     question: "How does capital allocation translate into portfolio risk?",
@@ -46,7 +46,7 @@ export const sections: {
   },
   {
     key: "stress",
-    number: "06",
+    number: "07",
     title: "Stress Testing",
     nav: "Stress testing",
     question: "Did diversification behave differently across market regimes?",
@@ -55,7 +55,7 @@ export const sections: {
   },
   {
     key: "momentum",
-    number: "07",
+    number: "08",
     title: "Quantitative Strategy",
     nav: "Strategy",
     question:
@@ -65,12 +65,12 @@ export const sections: {
   },
 ];
 export const chapters = [
-  { href: "/", number: "01", label: "Overview" },
+  { href: "/guide", number: "01", label: "Research guide" },
+  { href: "/", number: "02", label: "Overview" },
   ...sections.map((s) => ({
     href: `/${s.key}`,
     number: s.number,
     label: s.nav,
   })),
-  { href: "/methodology", number: "08", label: "Methodology" },
-  { href: "/guide", number: "09", label: "Research guide" },
+  { href: "/methodology", number: "09", label: "Methodology" },
 ];

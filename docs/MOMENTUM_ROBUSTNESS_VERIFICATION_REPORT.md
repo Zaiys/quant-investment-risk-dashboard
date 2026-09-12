@@ -1,5 +1,7 @@
 # Momentum robustness verification — 12 September 2026
 
+Historical verification record for the momentum sensitivity addition. For the current source cleanup and preservation checks, see [PUBLICATION_CLEANUP.md](PUBLICATION_CLEANUP.md).
+
 The two pre-specified sensitivity analyses are verified against the frozen reviewed inputs and published in the Momentum dashboard. The verified zero-cost, formation-close baseline is unchanged. This report records the addition to the baseline reviewed at `8b115a7`, using the existing robustness work through `858a99e`.
 
 ## Evaluation and actual results
@@ -83,8 +85,6 @@ Survivorship and selection bias claims are unchanged. The experiment still reuse
 | Browser warnings / errors | None observed |
 | Baseline preservation and whitespace | PASS |
 
-A test-only TypeScript option was corrected during the build pass; the final test, lint, typecheck and production build all pass. Local build/server checks required normal process and localhost access outside the restricted shell sandbox.
-
-Current snapshot SHA-256: `bc2ea7f7bdcb5cf58c703b38126ae81d75eef83e1be3f4cecde03303ecc3b59d`.
+Snapshot SHA-256 at this verification: `bc2ea7f7bdcb5cf58c703b38126ae81d75eef83e1be3f4cecde03303ecc3b59d`.
 
 See [REPRODUCIBILITY.md](REPRODUCIBILITY.md) for exact offline rerun commands. The verification and result files are ready for a commit on `feature/vercel-dashboard`. No merge to `master`, remote push or deployment is part of this completion.
