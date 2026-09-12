@@ -29,8 +29,8 @@ export function MomentumIntro({ section }: { section: AvailableMomentum }) {
           companies. Failed and unselected businesses are absent, and
           eligibility changes with listing history. This can substantially
           overstate performance. Costs, taxes, slippage and market impact are
-          omitted. Historical results are not forecasts or investment
-          recommendations.
+          omitted from the baseline. Historical results are not forecasts or
+          investment recommendations.
         </p>
         <p>
           Signals use only prices through the formation date. Allocation at that
@@ -49,6 +49,14 @@ export function MomentumIntro({ section }: { section: AvailableMomentum }) {
         Initial wealth: 1 on {formatDate(definition.initialWealthDate)}. The
         final holding month and first/final calendar years are partial.
       </p>
+      {section.sensitivities && (
+        <p className="margin-statement">
+          The baseline remains gross of costs with formation-close execution.{" "}
+          <a className="text-link" href="#momentum-sensitivities">
+            Compare transaction-cost and next-day-close sensitivities ↓
+          </a>
+        </p>
+      )}
     </>
   );
 }

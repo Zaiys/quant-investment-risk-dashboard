@@ -1,6 +1,6 @@
 {
   "schemaVersion": 3,
-  "generatedAt": "2026-09-11T11:28:37.814173+00:00",
+  "generatedAt": "2026-09-12T14:22:39.404313+00:00",
   "research": {
     "updatedAt": "2026-09-11",
     "period": {
@@ -448,6 +448,21 @@
         "id": "momentum-limits",
         "title": "Momentum Strategy — limitations",
         "detail": "Present-day universe survivorship and selection bias; changing listing/history eligibility; no transaction costs, taxes, slippage or market impact; provider and corporate-action limitations; monthly close execution and distribution-reinvestment simplifications; no independent out-of-sample evidence or tuning. Historical performance is not a forecast or a claim of investment suitability."
+      },
+      {
+        "id": "momentum-cost-sensitivity",
+        "title": "Momentum Strategy — transaction-cost sensitivity",
+        "detail": "The verified zero-cost, formation-close strategy remains the baseline. Apply 0, 5, 10 and 20 basis points per unit of the project's one-way turnover, including the initial cash-to-stock allocation and resizing retained holdings. At 10 bps and 25% turnover, the portfolio drag is 2.5 bps. Net first-day return = (1 − turnover × bps / 10,000) × (1 + gross return) − 1; other daily returns and SPY are unchanged. Costs reduce invested capital proportionally without changing target weights. This is a sensitivity convention per one-way turnover, not a fee per dollar bought and sold or an estimate of broker or market-specific costs. Taxes, spread, slippage and market impact are not separately estimated; no terminal liquidation charge is applied."
+      },
+      {
+        "id": "momentum-execution-sensitivity",
+        "title": "Momentum Strategy — next-day-close execution sensitivity",
+        "detail": "Keep the same formation signals, top ten, targets and monthly schedule. Liquidate prior holdings at each formation close, hold non-interest-bearing cash through the next trading-day close (zero strategy return that day), enter at its adjusted closing prices, and hold fixed adjusted units for the rest of the month. This monthly cash-gap convention does not retain old holdings through execution. Missing execution quotes stop the run; invalid quotes after entry trigger the baseline write-off policy. SPY stays continuously invested on the identical daily grid; initial wealth, risk-free convention and metric estimators match the baseline. Execution costs are zero in this separate timing check. Adjusted closes are still idealized fills. Waiting can help or hurt performance; this is not a claim of executable returns."
+      },
+      {
+        "id": "momentum-sensitivity-limits",
+        "title": "Momentum Strategy — interpreting the sensitivities",
+        "detail": "These are separately labelled sensitivity analyses, not baseline replacements, parameter tuning or a combined timing-and-cost model. The original 12-month rule, including the latest month, is preserved. The surviving-company universe, survivorship and selection bias, provider limitations and absence of independent out-of-sample evidence are unchanged. These checks do not establish investability or predict future performance. CAGR differences are percentage points, not relative percentage changes."
       }
     ]
   },
@@ -109048,7 +109063,220 @@
             }
           ]
         }
-      ]
+      ],
+      "sensitivities": {
+        "definition": {
+          "baselineUnchanged": true,
+          "costBps": [
+            0,
+            5,
+            10,
+            20
+          ],
+          "costBasis": "one-way turnover including initial allocation",
+          "executionPolicy": "cash through next trading-day close every month",
+          "executionTransactionCosts": 0,
+          "firstReturnDate": "1993-02-01",
+          "dailyObservations": 8460
+        },
+        "source": {
+          "path": "scripts/momentum_robustness.py",
+          "label": "Verified momentum sensitivity analyses",
+          "asOf": "2026-09-10",
+          "period": {
+            "start": "1993-01-29",
+            "end": "2026-09-10"
+          },
+          "methodology": "8460 shared daily returns, 1993-02-01 through 2026-09-10; initial wealth 1 on 1993-01-29. Same frozen data and selected surviving-company universe as the baseline.",
+          "notes": [
+            "The verified zero-cost, formation-close strategy remains the baseline. Apply 0, 5, 10 and 20 basis points per unit of the project's one-way turnover, including the initial cash-to-stock allocation and resizing retained holdings. At 10 bps and 25% turnover, the portfolio drag is 2.5 bps. Net first-day return = (1 − turnover × bps / 10,000) × (1 + gross return) − 1; other daily returns and SPY are unchanged. Costs reduce invested capital proportionally without changing target weights. This is a sensitivity convention per one-way turnover, not a fee per dollar bought and sold or an estimate of broker or market-specific costs. Taxes, spread, slippage and market impact are not separately estimated; no terminal liquidation charge is applied.",
+            "Keep the same formation signals, top ten, targets and monthly schedule. Liquidate prior holdings at each formation close, hold non-interest-bearing cash through the next trading-day close (zero strategy return that day), enter at its adjusted closing prices, and hold fixed adjusted units for the rest of the month. This monthly cash-gap convention does not retain old holdings through execution. Missing execution quotes stop the run; invalid quotes after entry trigger the baseline write-off policy. SPY stays continuously invested on the identical daily grid; initial wealth, risk-free convention and metric estimators match the baseline. Execution costs are zero in this separate timing check. Adjusted closes are still idealized fills. Waiting can help or hurt performance; this is not a claim of executable returns.",
+            "These are separately labelled sensitivity analyses, not baseline replacements, parameter tuning or a combined timing-and-cost model. The original 12-month rule, including the latest month, is preserved. The surviving-company universe, survivorship and selection bias, provider limitations and absence of independent out-of-sample evidence are unchanged. These checks do not establish investability or predict future performance. CAGR differences are percentage points, not relative percentage changes."
+          ]
+        },
+        "tables": [
+          {
+            "id": "momentum-cost-sensitivity",
+            "title": "Transaction-cost sensitivity",
+            "description": "0 / 5 / 10 / 20 bps per unit of one-way turnover, including initial allocation. 10 bps at 25% turnover costs 2.5 bps of portfolio value. Formation-close timing is unchanged. CAGR change is in percentage points (pp) versus the gross baseline.",
+            "columns": [
+              {
+                "key": "assumption",
+                "label": "Cost assumption",
+                "unit": "text"
+              },
+              {
+                "key": "cagr",
+                "label": "CAGR",
+                "unit": "percent"
+              },
+              {
+                "key": "volatility",
+                "label": "Volatility",
+                "unit": "percent"
+              },
+              {
+                "key": "sharpe",
+                "label": "Sharpe",
+                "unit": "ratio"
+              },
+              {
+                "key": "max_drawdown",
+                "label": "Maximum drawdown",
+                "unit": "percent"
+              },
+              {
+                "key": "mean_recurring_cost_drag_bps",
+                "label": "Mean recurring drag (bps)",
+                "unit": "number"
+              },
+              {
+                "key": "cagr_change_vs_gross_pp",
+                "label": "CAGR change (pp)",
+                "unit": "number"
+              }
+            ],
+            "rows": [
+              {
+                "id": "0.0",
+                "cells": [
+                  "0 bps · gross baseline",
+                  0.27459256132948817,
+                  0.24719985890039678,
+                  1.0088730173545188,
+                  -0.45015700190726793,
+                  0.0,
+                  0.0
+                ]
+              },
+              {
+                "id": "5.0",
+                "cells": [
+                  "5 bps",
+                  0.27282187468233565,
+                  0.24719161902792663,
+                  1.003262761073181,
+                  -0.45094715485939985,
+                  1.147007519690969,
+                  -0.17706866471525196
+                ]
+              },
+              {
+                "id": "10.0",
+                "cells": [
+                  "10 bps",
+                  0.2710534001417373,
+                  0.24718414132883854,
+                  0.9976490545714061,
+                  -0.45173629028395956,
+                  2.294015039381938,
+                  -0.35391611877508833
+                ]
+              },
+              {
+                "id": "20.0",
+                "cells": [
+                  "20 bps",
+                  0.26752307751546356,
+                  0.24717147272045473,
+                  0.9864114963655745,
+                  -0.4533115132037365,
+                  4.588030078763876,
+                  -0.7069483814024613
+                ]
+              }
+            ]
+          },
+          {
+            "id": "momentum-execution-sensitivity",
+            "title": "Next-day-close execution sensitivity",
+            "description": "At every formation close, liquidate prior holdings and hold cash through the next trading-day close. Earn zero on that day, then enter the same selected names. SPY remains continuously invested. All timing variants are gross of costs; CAGR change is in percentage points (pp) versus the baseline.",
+            "columns": [
+              {
+                "key": "variant",
+                "label": "Execution convention",
+                "unit": "text"
+              },
+              {
+                "key": "cagr",
+                "label": "CAGR",
+                "unit": "percent"
+              },
+              {
+                "key": "volatility",
+                "label": "Volatility",
+                "unit": "percent"
+              },
+              {
+                "key": "sharpe",
+                "label": "Sharpe",
+                "unit": "ratio"
+              },
+              {
+                "key": "max_drawdown",
+                "label": "Maximum drawdown",
+                "unit": "percent"
+              },
+              {
+                "key": "beta",
+                "label": "Beta vs SPY",
+                "unit": "ratio"
+              },
+              {
+                "key": "correlation",
+                "label": "Correlation with SPY",
+                "unit": "ratio"
+              },
+              {
+                "key": "cagr_change_vs_baseline_pp",
+                "label": "CAGR change (pp)",
+                "unit": "number"
+              }
+            ],
+            "rows": [
+              {
+                "id": "FORMATION_CLOSE_BASELINE",
+                "cells": [
+                  "Formation close · gross baseline",
+                  0.27459256132948817,
+                  0.24719985890039678,
+                  1.0088730173545188,
+                  -0.45015700190726793,
+                  1.053269771545254,
+                  0.7899279080852295,
+                  0.0
+                ]
+              },
+              {
+                "id": "NEXT_DAY_CLOSE",
+                "cells": [
+                  "Next-day close · monthly cash gap",
+                  0.234298133603682,
+                  0.2413309029414981,
+                  0.8940804816102647,
+                  -0.4632659320993793,
+                  0.9990715559250183,
+                  0.7675023478402275,
+                  -4.029442772580616
+                ]
+              },
+              {
+                "id": "SPY",
+                "cells": [
+                  "SPY · continuously invested",
+                  0.10801661866611467,
+                  0.18539416272592094,
+                  0.5159649423530355,
+                  -0.551894503964541,
+                  1.0000000000000002,
+                  1.0,
+                  -16.657594266337348
+                ]
+              }
+            ]
+          }
+        ]
+      }
     }
   }
 }

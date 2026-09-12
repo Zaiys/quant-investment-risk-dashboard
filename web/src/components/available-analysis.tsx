@@ -1,13 +1,20 @@
 "use client";
 import { useState } from "react";
-import type { AvailableSection } from "@/lib/types";
+import type { AvailableMomentum, AvailableSection } from "@/lib/types";
 import { selectAnalysis } from "@/lib/select-analysis";
 import { formatDate } from "@/lib/format";
 import { MetricCards, Provenance } from "./ui";
 import { ResearchChart } from "./research-chart";
 import { DataTable } from "./data-table";
 import { CorrelationMatrix } from "./correlation-matrix";
-export function AvailableAnalysis({ section }: { section: AvailableSection }) {
+import { MomentumSensitivities } from "./momentum-sensitivities";
+export function AvailableAnalysis({
+  section,
+  sensitivities,
+}: {
+  section: AvailableSection;
+  sensitivities?: AvailableMomentum["sensitivities"];
+}) {
   const [entityId, setEntityId] = useState("");
   const [scenarioId, setScenarioId] = useState("");
   const shown = selectAnalysis(section, entityId, scenarioId);
@@ -80,6 +87,7 @@ export function AvailableAnalysis({ section }: { section: AvailableSection }) {
           key={`${chart.id}-${entityId}-${scenarioId}`}
         />
       ))}
+      {sensitivities && <MomentumSensitivities sensitivities={sensitivities} />}
       {shown.matrices?.map((matrix) => (
         <CorrelationMatrix matrix={matrix} key={matrix.id} />
       ))}

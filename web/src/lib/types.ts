@@ -95,6 +95,19 @@ export type Dashboard = {
 };
 
 export type AvailableMomentum = AvailableSection & {
+  sensitivities?: {
+    definition: {
+      baselineUnchanged: true;
+      costBps: [0, 5, 10, 20];
+      costBasis: "one-way turnover including initial allocation";
+      executionPolicy: "cash through next trading-day close every month";
+      executionTransactionCosts: 0;
+      firstReturnDate: string;
+      dailyObservations: number;
+    };
+    source: Source;
+    tables: [DataTable, DataTable];
+  };
   definition: {
     lookbackMonths: 12;
     topN: 10;

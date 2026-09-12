@@ -14,6 +14,8 @@ Overview, Market Explorer, Risk vs Return, Diversification & Correlation, Portfo
 
 ## Application
 
+Chapter 07 also presents verified **0/5/10/20 bps transaction-cost sensitivity** and **next-day-close execution sensitivity** in separate tables. The original gross baseline remains unchanged. The timing check liquidates at every formation close and holds cash through the next trading-day close; it does not retain the previous holdings through execution. See [the robustness verification report](docs/MOMENTUM_ROBUSTNESS_VERIFICATION_REPORT.md) for actual results, independent checks and interpretation limits.
+
 | Chapter                          | Presentation                                                                |
 | -------------------------------- | --------------------------------------------------------------------------- |
 | 01 Overview                      | Research questions, asset universe, date coverage and publication record    |

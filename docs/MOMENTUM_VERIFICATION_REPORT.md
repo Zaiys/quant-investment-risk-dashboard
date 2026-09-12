@@ -1,5 +1,7 @@
 # Momentum research and project completion report
 
+This report records the original gross baseline verification. The subsequent sensitivity addition is documented in [the momentum robustness report](MOMENTUM_ROBUSTNESS_VERIFICATION_REPORT.md); the baseline results and limitations below remain unchanged.
+
 Verified 11 September 2026 on `feature/vercel-dashboard`, continuing from `cb1b896`. The completed research and website remain local. Nothing was pushed, merged or deployed. The project is ready for a user-approved Vercel preview.
 
 ## 1. Exact strategy

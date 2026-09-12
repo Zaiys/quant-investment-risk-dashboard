@@ -70,7 +70,15 @@ export default async function ResearchPage({
             dashboard.sections.momentum.status === "available" && (
               <MomentumIntro section={dashboard.sections.momentum} />
             )}
-          <AvailableAnalysis section={data} />
+          <AvailableAnalysis
+            section={data}
+            sensitivities={
+              config.key === "momentum" &&
+              dashboard.sections.momentum.status === "available"
+                ? dashboard.sections.momentum.sensitivities
+                : undefined
+            }
+          />
           {config.key === "market" && (
             <AssetHistory research={dashboard.research} />
           )}

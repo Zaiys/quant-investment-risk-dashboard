@@ -48,6 +48,7 @@ export function parseDashboard(input: unknown): Dashboard {
     if (!input.generatedAt)
       throw new Error("Available results require generatedAt");
     source(section.source);
+    const tables = [...section.tables];
     if (key === "momentum") {
       const definition = (section as AvailableMomentum).definition;
       if (!(
@@ -60,6 +61,23 @@ export function parseDashboard(input: unknown): Dashboard {
         section.source.period.end !== definition.lastReturnDate
       )
         throw new Error("Momentum source period differs from definition");
+      const sensitivity = (section as AvailableMomentum).sensitivities;
+      if (sensitivity) {
+        source(sensitivity.source);
+        if (
+          sensitivity.source.period.start !== section.source.period.start ||
+          sensitivity.source.period.end !== section.source.period.end ||
+          sensitivity.source.asOf !== section.source.asOf ||
+          sensitivity.definition.firstReturnDate !==
+            definition.firstReturnDate ||
+          sensitivity.definition.dailyObservations !==
+            definition.dailyObservations
+        )
+          throw new Error(
+            "Momentum sensitivity evaluation differs from baseline",
+          );
+        tables.push(...sensitivity.tables);
+      }
     }
     const entityIds = (section.entities ?? []).map((entity) => entity.id);
     const scenarioIds = (section.scenarios ?? []).map(
@@ -78,7 +96,7 @@ export function parseDashboard(input: unknown): Dashboard {
       [
         ...section.metrics,
         ...section.charts,
-        ...section.tables,
+        ...tables,
         ...(section.matrices ?? []),
       ].map((item) => item.id),
       `${key} widget ID`,
@@ -116,7 +134,7 @@ export function parseDashboard(input: unknown): Dashboard {
         }
       }
     }
-    for (const table of section.tables) {
+    for (const table of tables) {
       references(table);
       unique(
         table.columns.map((column) => column.key),

@@ -11,13 +11,12 @@ The original 12-month / top-10 / equal-weight / monthly rule remains unchanged.
 from __future__ import annotations
 
 import argparse
-import json
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
-from scripts.market_data import ROOT, load_market_inputs, universe_from_notebook, sha256
+from scripts.market_data import ROOT, load_market_inputs, universe_from_notebook
 from scripts.momentum_outputs import load_outputs
 from scripts.momentum_research import performance_summary
 
@@ -28,8 +27,12 @@ DEFAULT_OUTPUT = ROOT / "data/reviewed/momentum_robustness"
 
 def wealth_from_returns(returns, initial_date):
     """Prepend starting wealth 1 immediately before the first earned return."""
-    if returns.empty or returns.isna().any().any():
+    if returns.empty or not np.isfinite(returns.to_numpy()).all():
         raise ValueError("Wealth requires complete non-empty returns")
+    if returns.index.has_duplicates or not returns.index.is_monotonic_increasing:
+        raise ValueError("Wealth requires unique chronological returns")
+    if returns.le(-1).any().any():
+        raise ValueError("Wealth requires positive remaining capital")
     initial_date = pd.Timestamp(initial_date)
     if initial_date >= returns.index[0]:
         raise ValueError("Initial wealth date must strictly precede first return")
@@ -52,13 +55,17 @@ def apply_turnover_costs(returns, rebalances, cost_bps, strategy=STRATEGY):
     The cost is applied multiplicatively before the first gross return of the
     holding month: ``(1 - cost) * (1 + gross_return) - 1``.
     """
-    if cost_bps < 0:
-        raise ValueError("Cost assumption cannot be negative")
+    if not np.isfinite(cost_bps) or cost_bps < 0:
+        raise ValueError("Cost assumption must be finite and non-negative")
     if strategy not in returns.columns:
         raise ValueError(f"Missing strategy column: {strategy}")
     required = {"first_return", "turnover"}
     if not required.issubset(rebalances.columns):
         raise ValueError("Rebalances must contain first_return and turnover")
+    if not np.isfinite(returns.to_numpy()).all() or returns.index.has_duplicates:
+        raise ValueError("Costs require finite returns on a unique grid")
+    if pd.to_datetime(rebalances["first_return"]).duplicated().any():
+        raise ValueError("Duplicate rebalance first return would charge costs twice")
 
     adjusted = returns.copy()
     rate = float(cost_bps) / 10000.0
@@ -76,7 +83,8 @@ def apply_turnover_costs(returns, rebalances, cost_bps, strategy=STRATEGY):
         if drag >= 1:
             raise ValueError("Cost assumption removes all portfolio capital")
         gross = float(adjusted.loc[first_return, strategy])
-        adjusted.loc[first_return, strategy] = (1 - drag) * (1 + gross) - 1
+        if drag != 0:
+            adjusted.loc[first_return, strategy] = (1 - drag) * (1 + gross) - 1
 
     return adjusted
 
@@ -93,8 +101,8 @@ def cost_sensitivity(
     assumptions = tuple(float(value) for value in cost_bps)
     if len(set(assumptions)) != len(assumptions):
         raise ValueError("Cost assumptions must be unique")
-    if any(value < 0 for value in assumptions):
-        raise ValueError("Cost assumptions cannot be negative")
+    if not assumptions or any(not np.isfinite(value) or value < 0 for value in assumptions):
+        raise ValueError("Cost assumptions must be finite, non-negative and non-empty")
 
     rows = []
     for bps in assumptions:
@@ -107,11 +115,13 @@ def cost_sensitivity(
         row["mean_recurring_cost_drag"] = (
             float(rebalances["turnover"].iloc[1:].mean()) * bps / 10000.0
         )
+        row["mean_recurring_cost_drag_bps"] = row["mean_recurring_cost_drag"] * 10000
         rows.append(row)
 
     result = pd.DataFrame(rows).set_index("cost_bps").sort_index()
     if 0.0 in result.index:
         result["cagr_change_vs_gross"] = result["cagr"] - result.loc[0.0, "cagr"]
+        result["cagr_change_vs_gross_pp"] = result["cagr_change_vs_gross"] * 100
         result["total_return_change_vs_gross"] = (
             result["total_return"] - result.loc[0.0, "total_return"]
         )
@@ -122,19 +132,26 @@ def backtest_next_day_close(prices, weights, strategy=STRATEGY):
     """Re-run the fixed signal with execution delayed to the next trading-day close.
 
     Holdings are still selected from the formation-close signal. The portfolio
-    remains in cash through the first trading day of the following month, so its
+    liquidates the prior holdings at each formation close and remains in
+    non-interest-bearing cash through the first trading day of the following month, so its
     strategy return on that day is zero. It enters at that day's adjusted close
     and then holds fixed adjusted units for the rest of the month.
 
-    SPY remains continuously invested on the original daily grid. This isolates
-    the opportunity cost of waiting for executable next-day prices while keeping
-    the same calendar observations as the verified baseline.
+    SPY remains continuously invested on the original daily grid. This measures
+    a monthly cash-gap convention, not a delayed rebalance that retains the
+    prior holdings through execution. Next-day adjusted closes remain idealized
+    fills and cash gaps can help or hurt returns.
 
     No transaction costs are applied here; this check isolates execution timing.
     """
-    companies = list(weights.columns)
     blocks, diagnostics, events = [], [], []
     started = False
+    if prices.index.has_duplicates or not prices.index.is_monotonic_increasing:
+        raise ValueError("Next-day prices require a unique chronological grid")
+    if weights.index.has_duplicates or not weights.index.is_monotonic_increasing:
+        raise ValueError("Next-day weights require unique chronological formations")
+    if not np.isfinite(weights.to_numpy()).all() or weights.lt(0).any().any():
+        raise ValueError("Next-day weights must be finite and non-negative")
 
     for formation_date, target in weights.iterrows():
         if target.sum() == 0:
@@ -154,6 +171,8 @@ def backtest_next_day_close(prices, weights, strategy=STRATEGY):
             continue
 
         execution_date = dates[0]
+        if formation_date != prices.index[prices.index.get_loc(execution_date) - 1]:
+            raise ValueError("Formation must be the trading close immediately before execution")
         selected = target[target > 0]
         base = prices.loc[execution_date, selected.index]
         if base.isna().any() or not np.isfinite(base).all() or (base <= 0).any():
@@ -195,7 +214,7 @@ def backtest_next_day_close(prices, weights, strategy=STRATEGY):
         spy_prices = prices.loc[
             pd.DatetimeIndex([formation_date]).append(dates), "SPY"
         ]
-        if spy_prices.isna().any() or spy_prices.le(0).any():
+        if not np.isfinite(spy_prices).all() or spy_prices.le(0).any():
             raise ValueError("Missing benchmark quote inside next-day evaluation sample")
         spy_return = spy_prices.pct_change(fill_method=None).iloc[1:]
 
@@ -263,6 +282,7 @@ def execution_sensitivity(
     comparison["cagr_change_vs_baseline"] = (
         comparison["cagr"] - comparison.loc["FORMATION_CLOSE_BASELINE", "cagr"]
     )
+    comparison["cagr_change_vs_baseline_pp"] = comparison["cagr_change_vs_baseline"] * 100
     return comparison, delayed_returns, diagnostics, events
 
 
@@ -316,45 +336,19 @@ def run_robustness(output_dir=DEFAULT_OUTPUT, write=True):
         "execution_sensitivity": execution,
         "next_day_returns": delayed_returns,
         "next_day_diagnostics": delayed_diagnostics,
+        "next_day_wealth": wealth_from_returns(delayed_returns, initial_date),
+        "transaction_cost_returns": pd.DataFrame({
+            **{str(bps): apply_turnover_costs(frames["returns"], frames["rebalances"], bps)[STRATEGY]
+               for bps in COST_BPS},
+            "SPY": frames["returns"]["SPY"],
+        }),
     }
-
+    from scripts.momentum_robustness_outputs import verify_robustness, write_outputs
+    report = verify_robustness(outputs, frames, meta, prices, daily_rf, delayed_events)
+    if input_manifest != meta["input_manifest"]:
+        raise ValueError("Robustness inputs differ from the verified baseline")
     if write:
-        directory = Path(output_dir)
-        directory.mkdir(parents=True, exist_ok=True)
-        for name, frame in outputs.items():
-            frame.to_parquet(directory / f"{name}.parquet")
-        manifest = {
-            "purpose": (
-                "Robustness checks only; the verified formation-close, zero-cost baseline is unchanged."
-            ),
-            "baseline_notebook_sha256": meta["notebook_source_sha256"],
-            "baseline_last_return": meta["verification"]["last_return"],
-            "input_manifest": input_manifest,
-            "transaction_costs": {
-                "assumptions_bps": list(COST_BPS),
-                "definition": (
-                    "Basis points applied to the project's one-way turnover at each rebalance, "
-                    "including the initial allocation; cost is deducted before the first gross "
-                    "return of each holding month."
-                ),
-            },
-            "next_day_execution": {
-                "definition": (
-                    "Selections still use the formation-close signal. The strategy stays in cash "
-                    "through the next trading-day close, earns zero on that day, then holds fixed "
-                    "adjusted units for the rest of the month. SPY remains continuously invested."
-                ),
-                "transaction_costs": 0,
-                "missing_quote_events": delayed_events,
-            },
-            "script_sha256": sha256(Path(__file__)),
-            "frames": {
-                name: sha256(directory / f"{name}.parquet") for name in outputs
-            },
-        }
-        (directory / "manifest.json").write_text(
-            json.dumps(manifest, indent=2, allow_nan=False) + "\n"
-        )
+        write_outputs(outputs, meta, report, output_dir)
 
     return outputs
 
@@ -393,6 +387,7 @@ def main():
     args = parser.parse_args()
 
     outputs = run_robustness(args.output_dir, write=not args.no_write)
+    print("Independent return-path, turnover, metric and calendar checks passed.")
 
     print("\nTRANSACTION-COST SENSITIVITY")
     _print_percent_table(
@@ -402,8 +397,8 @@ def main():
             "volatility",
             "sharpe",
             "max_drawdown",
-            "mean_recurring_cost_drag",
-            "cagr_change_vs_gross",
+            "mean_recurring_cost_drag_bps",
+            "cagr_change_vs_gross_pp",
         ],
     )
 
@@ -417,7 +412,7 @@ def main():
             "max_drawdown",
             "beta",
             "correlation",
-            "cagr_change_vs_baseline",
+            "cagr_change_vs_baseline_pp",
         ],
     )
 

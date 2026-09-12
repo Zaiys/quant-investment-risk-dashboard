@@ -200,9 +200,12 @@ def main():
     frames,meta=load_reviewed_outputs()
     payload=build_dashboard(frames,meta)
     from scripts.momentum_outputs import load_outputs
-    from scripts.build_momentum_dashboard import attach_momentum
+    from scripts.build_momentum_dashboard import attach_momentum, attach_sensitivities
+    from scripts.momentum_robustness_outputs import load_outputs as load_robustness
     momentum_frames, momentum_meta = load_outputs()
     payload = attach_momentum(payload, momentum_frames, momentum_meta)
+    robustness_frames, robustness_meta = load_robustness()
+    payload = attach_sensitivities(payload, robustness_frames, robustness_meta)
     validate_dashboard(payload)
     output=ROOT/'web/src/data/dashboard.json'
     if args.check:
@@ -217,6 +220,7 @@ def main():
             'numeric_values':count_values(payload),'snapshot_sha256':sha256(output),
             'notebook_source_sha256':meta['notebook_source_sha256'],
             'momentum_notebook_source_sha256':momentum_meta['notebook_source_sha256'],
+            'momentum_robustness_manifest_sha256':sha256(ROOT/'data/reviewed/momentum_robustness/manifest.json'),
             'sections':{key:value['status'] for key,value in payload['sections'].items()},
             'chart_sampling':'Observed quarter ends plus first/last points and gap boundaries; stress daily. Momentum uses observed month ends plus initial/final dates and annual daily drawdown troughs. No interpolation or financial recomputation.'}
     (ROOT/'data/provenance/dashboard-crosscheck.json').write_text(json.dumps(report,indent=2)+'\n')

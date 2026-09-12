@@ -474,6 +474,10 @@ dd {
 .view-intro {
   margin: 2rem 0;
 }
+#momentum-sensitivities {
+  margin-top: 3rem;
+  scroll-margin-top: 6rem;
+}
 .margin-note {
   border-top: 1px solid var(--rule);
   padding-top: 1rem;

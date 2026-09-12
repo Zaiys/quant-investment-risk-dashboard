@@ -76,3 +76,47 @@ def attach_momentum(payload, frames, meta):
     payload['sections']['momentum']=section
     payload['methodology']['items']=[item for item in payload['methodology']['items'] if item['id']!='momentum']+method
     return payload
+
+
+def attach_sensitivities(payload, frames, meta):
+    """Attach separately sourced sensitivity tables; preserve all baseline widgets."""
+    v = meta['verification']
+    date_note = (f"{v['daily_observations']} shared daily returns, {v['first_return']} through {v['last_return']}; "
+                 f"initial wealth 1 on {v['initial_wealth_date']}. Same frozen data and selected surviving-company universe as the baseline.")
+    measures = [('cagr', 'CAGR', 'percent'), ('volatility', 'Volatility', 'percent'),
+                ('sharpe', 'Sharpe', 'ratio'), ('max_drawdown', 'Maximum drawdown', 'percent')]
+    costs = table('momentum-cost-sensitivity', 'Transaction-cost sensitivity',
+                  '0 / 5 / 10 / 20 bps per unit of one-way turnover, including initial allocation. '
+                  '10 bps at 25% turnover costs 2.5 bps of portfolio value. Formation-close timing is unchanged. '
+                  'CAGR change is in percentage points (pp) versus the gross baseline.',
+                  frames['transaction_cost_sensitivity'],
+                  [*measures, ('mean_recurring_cost_drag_bps', 'Mean recurring drag (bps)', 'number'),
+                   ('cagr_change_vs_gross_pp', 'CAGR change (pp)', 'number')], tag=False)
+    costs['columns'][0].update(key='assumption', label='Cost assumption')
+    for row in costs['rows']:
+        bps = int(float(row['id']))
+        row['cells'][0] = '0 bps · gross baseline' if bps == 0 else f'{bps} bps'
+    timing = table('momentum-execution-sensitivity', 'Next-day-close execution sensitivity',
+                   'At every formation close, liquidate prior holdings and hold cash through the next trading-day close. '
+                   'Earn zero on that day, then enter the same selected names. SPY remains continuously invested. '
+                   'All timing variants are gross of costs; CAGR change is in percentage points (pp) versus the baseline.',
+                   frames['execution_sensitivity'],
+                   [*measures, ('beta', 'Beta vs SPY', 'ratio'), ('correlation', 'Correlation with SPY', 'ratio'),
+                    ('cagr_change_vs_baseline_pp', 'CAGR change (pp)', 'number')], tag=False)
+    timing['columns'][0].update(key='variant', label='Execution convention')
+    labels = {'FORMATION_CLOSE_BASELINE': 'Formation close · gross baseline',
+              'NEXT_DAY_CLOSE': 'Next-day close · monthly cash gap', 'SPY': 'SPY · continuously invested'}
+    for row in timing['rows']:
+        row['cells'][0] = labels[row['id']]
+    payload['sections']['momentum']['sensitivities'] = {
+        'definition': {**meta['definition'], 'firstReturnDate': v['first_return'],
+                       'dailyObservations': v['daily_observations']},
+        'source': {'path': 'scripts/momentum_robustness.py', 'label': 'Verified momentum sensitivity analyses',
+                   'asOf': v['last_return'], 'period': period(v['initial_wealth_date'], v['last_return']),
+                   'methodology': date_note,
+                   'notes': [item['detail'] for item in meta['methodology']]},
+        'tables': [costs, timing],
+    }
+    payload['methodology']['items'].extend(meta['methodology'])
+    payload['generatedAt'] = v['checked_at']
+    return payload

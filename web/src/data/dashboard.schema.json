@@ -834,6 +834,9 @@
                 "holdingMonths"
               ],
               "additionalProperties": false
+            },
+            "sensitivities": {
+              "$ref": "#/definitions/momentumSensitivities"
             }
           },
           "required": [
@@ -884,6 +887,182 @@
           ]
         }
       ]
+    },
+    "momentumSensitivities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "definition",
+        "source",
+        "tables"
+      ],
+      "properties": {
+        "definition": {
+          "type": "object",
+          "properties": {
+            "baselineUnchanged": {
+              "const": true
+            },
+            "costBps": {
+              "const": [
+                0,
+                5,
+                10,
+                20
+              ]
+            },
+            "costBasis": {
+              "const": "one-way turnover including initial allocation"
+            },
+            "executionPolicy": {
+              "const": "cash through next trading-day close every month"
+            },
+            "executionTransactionCosts": {
+              "const": 0
+            },
+            "firstReturnDate": {
+              "type": "string",
+              "format": "date"
+            },
+            "dailyObservations": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "required": [
+            "baselineUnchanged",
+            "costBps",
+            "costBasis",
+            "executionPolicy",
+            "executionTransactionCosts",
+            "firstReturnDate",
+            "dailyObservations"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/source"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "const": "scripts/momentum_robustness.py"
+                }
+              }
+            }
+          ]
+        },
+        "tables": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": [
+            {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/section/oneOf/1/properties/tables/items"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "const": "momentum-cost-sensitivity"
+                    },
+                    "rows": {
+                      "type": "array",
+                      "minItems": 4,
+                      "maxItems": 4,
+                      "items": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "const": "0.0"
+                            }
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "const": "5.0"
+                            }
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "const": "10.0"
+                            }
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "const": "20.0"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/section/oneOf/1/properties/tables/items"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "const": "momentum-execution-sensitivity"
+                    },
+                    "rows": {
+                      "type": "array",
+                      "minItems": 3,
+                      "maxItems": 3,
+                      "items": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "const": "FORMATION_CLOSE_BASELINE"
+                            }
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "const": "NEXT_DAY_CLOSE"
+                            }
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "const": "SPY"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
     }
   }
 }

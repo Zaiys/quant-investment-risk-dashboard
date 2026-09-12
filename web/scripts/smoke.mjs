@@ -23,6 +23,13 @@ for (const route of routes) {
     /SYNTHETIC PRESENTATION TEST/,
     `${route} must not include test fixtures`,
   );
+  if (route === "/momentum") {
+    assert.match(html, /Transaction-cost sensitivity/);
+    assert.match(html, /Next-day-close execution sensitivity/);
+    assert.match(html, /monthly cash gap/);
+    assert.match(html, /gross baseline/);
+    assert.match(html, /CAGR change \(pp\)/);
+  }
   console.log(`PASS ${route}`);
 }
 const exported = await fetch(new URL("/export", base));

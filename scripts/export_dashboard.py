@@ -56,12 +56,22 @@ def validate_dashboard(payload: Any) -> dict[str, Any]:
             continue
         if payload["generatedAt"] is None:
             raise ValueError("Available results require generatedAt")
+        tables = list(section['tables'])
         if key == "momentum":
             definition = section['definition']
             if not (definition['initialWealthDate'] < definition['firstReturnDate'] <= definition['lastReturnDate']):
                 raise ValueError('Momentum formation must precede evaluation returns')
             if section['source']['period'] != {'start': definition['initialWealthDate'], 'end': definition['lastReturnDate']}:
                 raise ValueError('Momentum source period differs from definition')
+            sensitivity = section.get('sensitivities')
+            if sensitivity is not None:
+                check_source(sensitivity['source'])
+                if (sensitivity['source']['period'] != section['source']['period']
+                        or sensitivity['source']['asOf'] != section['source']['asOf']
+                        or sensitivity['definition']['firstReturnDate'] != definition['firstReturnDate']
+                        or sensitivity['definition']['dailyObservations'] != definition['dailyObservations']):
+                    raise ValueError('Momentum sensitivity evaluation differs from baseline')
+                tables.extend(sensitivity['tables'])
         entity_ids = [entity["id"] for entity in section.get("entities", [])]
         scenario_ids = [scenario["id"] for scenario in section.get("scenarios", [])]
         _unique(entity_ids, "entity ID")
@@ -82,7 +92,7 @@ def validate_dashboard(payload: Any) -> dict[str, Any]:
             raise ValueError("Source period is reversed")
         if source["period"]["end"] > source["asOf"]:
             raise ValueError("Source period ends after asOf")
-        _unique([widget["id"] for kind in ("metrics", "charts", "tables", "matrices") for widget in section.get(kind, [])], f"{key} widget ID")
+        _unique([widget['id'] for widget in [*section['metrics'], *section['charts'], *tables, *section.get('matrices', [])]], f"{key} widget ID")
         for chart in section["charts"]:
             references(chart)
             _unique([series["id"] for series in chart["series"]], "series ID")
@@ -97,7 +107,7 @@ def validate_dashboard(payload: Any) -> dict[str, Any]:
                         raise ValueError("Chart x coordinate does not match xUnit")
                     if chart["kind"] == "scatter" and not is_number:
                         raise ValueError("Scatter charts require numeric x coordinates")
-        for table in section["tables"]:
+        for table in tables:
             references(table)
             _unique([column["key"] for column in table["columns"]], "column key")
             _unique([row["id"] for row in table["rows"]], "row ID")

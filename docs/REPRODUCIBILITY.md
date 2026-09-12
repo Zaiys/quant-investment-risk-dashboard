@@ -12,6 +12,7 @@ python3.12 -m venv .venv-research
 .venv-research/bin/python -m scripts.market_data --end 2026-09-11
 .venv-research/bin/python -m scripts.run_market_research
 .venv-research/bin/python -m scripts.run_momentum_research
+.venv-research/bin/python -m scripts.momentum_robustness
 .venv-research/bin/python -m scripts.build_market_dashboard
 .venv-research/bin/python -m scripts.build_market_dashboard --check
 .venv-research/bin/python scripts/export_dashboard.py --check
@@ -59,8 +60,9 @@ The completed `notebooks/02_momentum_strategy.ipynb` uses the same verified 50-c
 
 ```bash
 .venv-research/bin/python -m scripts.run_momentum_research
-.venv-research/bin/python -m unittest discover -s tests -v
+.venv-research/bin/python -m scripts.momentum_robustness
 .venv-research/bin/python -m scripts.build_market_dashboard
+.venv-research/bin/python -m unittest discover -s tests -v
 .venv-research/bin/python -m scripts.build_market_dashboard --check
 .venv-research/bin/python scripts/export_dashboard.py --check
 ```
@@ -71,8 +73,29 @@ The runner starts a fresh Jupyter kernel with the selected Python environment, e
 
 All signal and target-weight dates are retained, including pre-SPY formation history. Evaluated holdings and portfolio outputs begin at the first SPY-comparable allocation: initial wealth on 1993-01-29 and daily returns from 1993-02-01 to 2026-09-10. There are 8,460 shared daily returns and 404 holding months; September 2026 is partial. Best/worst calendar years exclude the partial first/final years. No selected quote was missing in this snapshot, so the conservative write-off fallback did not affect observed results.
 
-The existing `build_market_dashboard` command now loads **both** verified output sets and calls `scripts/build_momentum_dashboard.py` to attach the strategy section. Missing or stale momentum outputs fail the command; it cannot silently erase the completed strategy. It reuses the market section objects without changing their numbers, sources, observations or sampling. Market definitions in `METHODOLOGY.md` are preserved and distinct Momentum Strategy sections are appended from the reviewed notebook metadata.
+The existing `build_market_dashboard` command now loads the verified market, baseline momentum and robustness output sets and calls `scripts/build_momentum_dashboard.py` to attach the strategy section. Missing or stale momentum outputs fail the command; it cannot silently erase the completed strategy. It reuses the market section objects without changing their numbers, sources, observations or sampling. Market definitions in `METHODOLOGY.md` are preserved and distinct Momentum Strategy sections are appended from the reviewed notebook metadata.
 
 Momentum charts select already-calculated month-end observations, initial/final observations and each calendar year's daily drawdown minima for both series. No estimators run in the exporter or frontend. Python tests cross-check every published momentum metric, every numeric table cell and every chart coordinate/value against the reviewed frames. The guide reads its illustrative strategy/SPY CAGR directly from that snapshot. The v3 definition additionally requires the fixed rule, costs, frequency and evaluation dates; Python and TypeScript reject inconsistent formation periods and unsupported rule settings.
 
 For final local UI checks, build and start `web/`, run `npm run smoke`, and inspect `/momentum` and `/guide` at desktop, tablet and mobile widths. The new page is chapter 09; its optional video area has no media URL. Fresh CI clones lack ignored raw/reviewed caches, so cache-dependent research integration tests are explicitly skipped there; deterministic timing/accounting, schema and frontend tests still run. Exact research reruns on another machine require transfer of the frozen raw and reviewed cache directories and their manifests.
+
+## Momentum robustness — existing frozen baseline
+
+With the existing reviewed baseline and frozen cache, run:
+
+```bash
+.venv-research/bin/python -m unittest tests.test_momentum_robustness -v
+.venv-research/bin/python -m scripts.momentum_robustness
+.venv-research/bin/python -m scripts.build_market_dashboard
+.venv-research/bin/python -m unittest discover -s tests -v
+.venv-research/bin/python -m scripts.build_market_dashboard --check
+.venv-research/bin/python scripts/export_dashboard.py --check
+```
+
+This path neither downloads prices nor rewrites the baseline notebook or its reviewed tables. Use `python -m scripts.momentum_robustness --no-write` to recompute and independently verify the sensitivities without changing the output files or verification timestamp.
+
+The six local Parquet frames in `data/reviewed/momentum_robustness/` retain cost summary, all four cost-adjusted daily return series plus SPY, timing comparison, next-day daily returns and wealth, and execution diagnostics. `scripts/momentum_robustness_outputs.py` independently reconstructs every baseline turnover from raw prices, reconciles all cost wealth paths against the cumulative product of cost factors, verifies each delayed daily path and monthly endpoint, and checks 56 summary metrics with NumPy identities. Zero-cost daily returns and SPY must match the baseline exactly.
+
+The local manifest and its tracked copy `data/provenance/momentum-robustness-verification.json` bind the results to the baseline manifest, all baseline frame hashes, frozen input manifest, calculation and verification helpers, assumptions, runtime and output hashes. The loader rejects stale or incomplete records. Re-running either baseline research notebook requires regenerating the sensitivity verification and combined snapshot afterward. The dashboard adapter uses only checked frames and generates the methodology document from the same metadata, so sensitivity explanations survive future exports.
+
+See [MOMENTUM_ROBUSTNESS_VERIFICATION_REPORT.md](MOMENTUM_ROBUSTNESS_VERIFICATION_REPORT.md) for the verified results and the explicit monthly cash-gap execution convention.

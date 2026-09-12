@@ -20,6 +20,16 @@ An available section has `status: "available"`, `source`, `metrics`, `charts`, a
 
 Version 3 accepts momentum as awaiting or as a dedicated available section. Available momentum requires `source.path = "notebooks/02_momentum_strategy.ipynb"` and `definition`, in addition to the ordinary widget arrays. The definition requires `lookbackMonths: 12`, `topN: 10`, `rebalance: "monthly"`, `weighting: "equal at formation; drift within month"`, `transactionCosts: 0`, `skipMonth: false`, `initialWealthDate`, `firstReturnDate`, `lastReturnDate`, `dailyObservations`, and `holdingMonths`. Counts are positive integers. Initial wealth must precede the first return; the source period must run from initial wealth through the last return. These are reviewed research choices for one specified experiment; unsupported alternatives require another deliberate contract change.
 
+## Momentum sensitivity extension
+
+Version 3 additionally permits a `sensitivities` object on available momentum. It is optional for older v3 producers, but the combined reviewed-output adapter requires the local robustness manifest and always exports it. Missing or stale reviewed robustness data stops that adapter before publication.
+
+The object requires `definition`, its own `source` with `path: "scripts/momentum_robustness.py"`, and exactly two `tables`: `momentum-cost-sensitivity` followed by `momentum-execution-sensitivity`. Cost rows are ordered `0.0`, `5.0`, `10.0`, `20.0`; timing rows are `FORMATION_CLOSE_BASELINE`, `NEXT_DAY_CLOSE`, `SPY`. Python and TypeScript validate the shared schema, row shapes, numeric types, references and widget-ID uniqueness across baseline and sensitivity tables. The source period and data date, first return and daily count must match the baseline.
+
+The sensitivity definition fixes `baselineUnchanged: true`, `costBps: [0, 5, 10, 20]`, `costBasis: "one-way turnover including initial allocation"`, `executionPolicy: "cash through next trading-day close every month"` and `executionTransactionCosts: 0`, plus `firstReturnDate` and `dailyObservations`. The baseline definition continues to require zero transaction costs and its original rule.
+
+The cost table presents CAGR, volatility, Sharpe, maximum drawdown, mean recurring portfolio drag in bps, and CAGR difference in percentage points. The timing table adds beta and correlation. Bps and percentage-point values are already converted in Python and use the `number` display unit; return/volatility/drawdown fractions use `percent`. The browser only formats and sorts supplied values. Both sensitivity tables remain visible together when a baseline entity is selected, with independent source notes and explicit comparison labels.
+
 ## Research record and methodology
 
 The root also requires `research` and `methodology`.
