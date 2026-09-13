@@ -1,9 +1,9 @@
 name: Dashboard checks
 on:
   push:
-    branches: [master, feature/vercel-dashboard]
+    branches: [master, feature/vercel-dashboard, feature/dashboard-readability]
   pull_request:
-    branches: [master]
+    branches: [master, feature/vercel-dashboard]
 permissions:
   contents: read
 jobs:
@@ -32,3 +32,25 @@ jobs:
         working-directory: web
       - run: npm run typecheck
         working-directory: web
+      - name: Browser readability checks
+        working-directory: web
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+          npm run start > /tmp/dashboard-server.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:3000/ >/dev/null; then break; fi
+            sleep 1
+          done
+          npm run smoke
+          node scripts/readability-smoke.mjs
+      - name: Retain review screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dashboard-readability-review
+          path: readability-browser-results/
+          if-no-files-found: ignore
+          retention-days: 7
