@@ -18,6 +18,10 @@ page.on("console", (message) => {
   if (message.type() === "error") errors.push(message.text());
   if (message.type() === "warning") warnings.push(message.text());
 });
+async function capture(locator, name) {
+  await locator.scrollIntoViewIfNeeded();
+  await locator.screenshot({ path: `${dir}/${name}.png`, animations: "disabled" });
+}
 try {
   for (const width of [390, 768, 1440]) {
     await page.setViewportSize({ width, height: 960 });
@@ -26,7 +30,21 @@ try {
       assert.equal(response.status(), 200, route);
       assert.equal(await page.locator("h1").count(), 1, route);
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1), true, `${route} overflow at ${width}`);
-      await page.screenshot({ path: `${dir}/${route.replaceAll("/", "") || "overview"}-${width}.png` });
+      const name = route.replaceAll("/", "") || "overview";
+      await page.screenshot({ path: `${dir}/${name}-${width}.png` });
+      // Capture the actual figures as well as the page opening, so visual review
+      // does not mistake a clean heading for a checked chart.
+      const figures = page.locator("section.readable-chart");
+      if (await figures.count()) {
+        await capture(figures.first(), `${name}-chart-${width}`);
+        if (route === "/momentum" || route === "/portfolio") {
+          await capture(figures.nth(1), `${name}-drawdown-${width}`);
+        }
+      }
+      const matrix = page.locator(".readable-matrix");
+      if (await matrix.count()) await capture(matrix, `${name}-pair-lookup-${width}`);
+      const allocation = page.locator(".allocation-chart");
+      if (await allocation.count()) await capture(allocation, `${name}-allocation-${width}`);
       checks.push(`${route} at ${width}px: 200, one heading, no page overflow`);
     }
   }
@@ -34,9 +52,12 @@ try {
   const wealth = page.locator("section.readable-chart").filter({ has: page.getByRole("heading", { name: "Momentum and SPY indexed wealth", exact: true }) });
   assert.equal(await wealth.getByRole("button", { name: "Logarithmic", exact: true }).getAttribute("aria-pressed"), "true");
   const colour = await wealth.locator('[data-series-id="SPY"]').getAttribute("data-colour");
+  await capture(wealth, "momentum-both-log");
   await wealth.getByRole("button", { name: "Linear", exact: true }).click();
+  await capture(wealth, "momentum-both-linear");
   await wealth.getByLabel("Inspect series", { exact: true }).selectOption("SPY");
   assert.equal(await wealth.locator('[data-series-id="SPY"]').getAttribute("data-colour"), colour);
+  await capture(wealth, "momentum-spy-linear");
   await wealth.getByText("View chart values", { exact: true }).click();
   await wealth.locator("table tbody tr").first().waitFor();
   assert.equal(await wealth.locator("table tbody tr").first().locator("td").first().innerText(), "SPY");
@@ -52,9 +73,12 @@ try {
   await page.getByLabel("Inspect asset or portfolio", { exact: true }).selectOption("MSFT");
   assert.equal(await page.getByRole("heading", { name: "MSFT at a glance" }).count(), 1);
   assert.match(await page.locator(".asset-at-glance").innerText(), /Not exported for this sample/);
+  await capture(page.locator(".asset-at-glance"), "risk-common-summary-msft");
+  await capture(page.locator(".readable-chart").first(), "risk-common-scatter-msft");
   await page.getByRole("button", { name: "Individual histories", exact: true }).click();
   await page.getByLabel("Inspect asset or portfolio", { exact: true }).selectOption("MSFT");
   assert.doesNotMatch(await page.locator(".asset-at-glance").innerText(), /Not exported for this sample/);
+  await capture(page.locator(".asset-at-glance"), "risk-individual-summary-msft");
   checks.push("Risk basis switch does not borrow individual-history drawdown for common sample");
 
   await page.goto(base + "/correlation", { waitUntil: "networkidle" });
@@ -66,6 +90,7 @@ try {
   const expected = new Intl.NumberFormat("en-GB", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(matrix.values[row][column]);
   assert.equal(await page.locator(".correlation-answer > strong").innerText(), expected);
   assert.equal(await page.locator(".correlation-table").count(), 0);
+  await capture(page.locator(".readable-matrix"), "correlation-spy-tlt");
   await page.getByText(/Open full matrix/).click();
   await page.locator(".correlation-table").waitFor();
   await page.getByRole("region", { name: / matrix$/ }).focus();
