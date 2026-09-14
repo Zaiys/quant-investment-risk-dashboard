@@ -1,0 +1,2 @@
+# Optional presentation export validation; research dependencies remain separate.
+jsonschema>=4.23,<5

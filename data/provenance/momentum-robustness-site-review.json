@@ -1,0 +1,89 @@
+{
+  "checked_at": "2026-09-12T14:28:51.189941+00:00",
+  "status": "passed",
+  "baseline_commit": "8b115a730538c6a9ba311edbd78b009c0d6e99c6",
+  "inherited_robustness_commit": "858a99ee11fa57136b3d0b031da6d0efce49f161",
+  "snapshot_sha256": "bc2ea7f7bdcb5cf58c703b38126ae81d75eef83e1be3f4cecde03303ecc3b59d",
+  "robustness_manifest_sha256": "89bf717a4389a0fb0810c9b4649e235c960d610a3fc6c4d28173767b503a39d7",
+  "runtime": {
+    "python": "3.12.14",
+    "node": "22.23.2"
+  },
+  "python_tests": {
+    "passed": 42,
+    "failed": 0,
+    "skipped": 0
+  },
+  "frontend_tests": {
+    "passed": 49,
+    "failed": 0
+  },
+  "checks": {
+    "research_execution": "passed",
+    "independent_math": "passed",
+    "python_exporter": "passed",
+    "exact_snapshot_rebuild": "passed",
+    "shared_schema": "passed",
+    "lint": "passed",
+    "typescript": "passed",
+    "production_build": "passed",
+    "git_diff_check": "passed"
+  },
+  "http_smoke": {
+    "routes": [
+      "/",
+      "/market",
+      "/risk-return",
+      "/correlation",
+      "/portfolio",
+      "/stress",
+      "/momentum",
+      "/methodology",
+      "/guide"
+    ],
+    "all_status_200": true,
+    "unknown_route_status": 404,
+    "download_byte_exact": true
+  },
+  "responsive": [
+    {
+      "route": "/momentum",
+      "width": 390,
+      "document_scroll_width": 390,
+      "overflow": false
+    },
+    {
+      "route": "/momentum",
+      "width": 768,
+      "document_scroll_width": 768,
+      "overflow": false
+    },
+    {
+      "route": "/momentum",
+      "width": 1440,
+      "document_scroll_width": 1440,
+      "overflow": false
+    }
+  ],
+  "browser_interactions": [
+    "sensitivity anchor",
+    "numeric table sorting",
+    "SPY selection preserves four cost and three timing rows",
+    "keyboard horizontal scrolling on phone"
+  ],
+  "browser_warnings": [],
+  "browser_errors": [],
+  "preservation": {
+    "original_six_sections_exactly_equal": true,
+    "original_methodology_items_preserved": true,
+    "research_metadata_unchanged": true,
+    "notebooks_and_baseline_helpers_byte_identical": true,
+    "baseline_provenance_byte_identical": true,
+    "raw_cache_hashes_verified": true
+  },
+  "deployment": {
+    "pushed": false,
+    "merged": false,
+    "deployed": false
+  }
+}

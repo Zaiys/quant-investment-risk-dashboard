@@ -1,0 +1,79 @@
+{
+  "basis": "Same frozen inputs; comparison of recovered and corrected implementations, not old stored outputs.",
+  "drawdown_comparison": [
+    {
+      "evaluation": "Full portfolio",
+      "recovered_formula": -0.36800421959828145,
+      "corrected_formula": -0.36800421959828145
+    },
+    {
+      "evaluation": "Full SPY",
+      "recovered_formula": -0.5518945039645407,
+      "corrected_formula": -0.5518945039645407
+    },
+    {
+      "evaluation": "Global Financial Crisis portfolio",
+      "recovered_formula": -0.36800421959828056,
+      "corrected_formula": -0.36800421959828056
+    },
+    {
+      "evaluation": "Global Financial Crisis SPY",
+      "recovered_formula": -0.5518945039645415,
+      "corrected_formula": -0.5518945039645415
+    },
+    {
+      "evaluation": "COVID Crash portfolio",
+      "recovered_formula": -0.2525674245073105,
+      "corrected_formula": -0.2525674245073105
+    },
+    {
+      "evaluation": "COVID Crash SPY",
+      "recovered_formula": -0.33717275860137663,
+      "corrected_formula": -0.33717275860137663
+    },
+    {
+      "evaluation": "2022 Selloff portfolio",
+      "recovered_formula": -0.21397842514054144,
+      "corrected_formula": -0.21397842514054144
+    },
+    {
+      "evaluation": "2022 Selloff SPY",
+      "recovered_formula": -0.2449638194524172,
+      "corrected_formula": -0.2449638194524172
+    }
+  ],
+  "common_cagr_volatility_max_absolute_delta": 2.220446049250313e-16,
+  "explanation": "This snapshot has no interior missing prices, so the common-observation correction does not alter the sample. Initial-wealth handling improves correctness for first-return losses; for these portfolio/SPY windows later peaks determine the same worst drawdowns.",
+  "largest_absolute_daily_moves": [
+    {
+      "ticker": "MS",
+      "date": "2008-10-13",
+      "simple_return": 0.8698346516612174,
+      "treatment": "Retained Yahoo adjusted observations; no automatic repair or independent exchange reconciliation."
+    },
+    {
+      "ticker": "AMD",
+      "date": "2016-04-22",
+      "simple_return": 0.5229008335186689,
+      "treatment": "Retained Yahoo adjusted observations; no automatic repair or independent exchange reconciliation."
+    },
+    {
+      "ticker": "AAPL",
+      "date": "2000-09-29",
+      "simple_return": -0.5186920632754277,
+      "treatment": "Retained Yahoo adjusted observations; no automatic repair or independent exchange reconciliation."
+    },
+    {
+      "ticker": "ORCL",
+      "date": "1992-12-23",
+      "simple_return": 0.43871139188842156,
+      "treatment": "Retained Yahoo adjusted observations; no automatic repair or independent exchange reconciliation."
+    },
+    {
+      "ticker": "NVDA",
+      "date": "2000-03-07",
+      "simple_return": 0.42414781721426364,
+      "treatment": "Retained Yahoo adjusted observations; no automatic repair or independent exchange reconciliation."
+    }
+  ]
+}

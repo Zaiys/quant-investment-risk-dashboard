@@ -1,0 +1,344 @@
+{
+  "checked_at": "2026-09-11T10:43:58.627Z",
+  "routes_and_viewports": [
+    {
+      "path": "/",
+      "charts": 0,
+      "h1": 1,
+      "legends": [],
+      "scrollWidth": 375,
+      "width": 375
+    },
+    {
+      "path": "/market",
+      "charts": 2,
+      "h1": 1,
+      "legends": [
+        88,
+        88
+      ],
+      "scrollWidth": 375,
+      "width": 375
+    },
+    {
+      "path": "/risk-return",
+      "charts": 2,
+      "h1": 1,
+      "legends": [
+        88,
+        88
+      ],
+      "scrollWidth": 375,
+      "width": 375
+    },
+    {
+      "path": "/correlation",
+      "charts": 0,
+      "h1": 1,
+      "legends": [],
+      "scrollWidth": 375,
+      "width": 375
+    },
+    {
+      "path": "/portfolio",
+      "charts": 2,
+      "h1": 1,
+      "legends": [
+        26.3984375,
+        26.3984375
+      ],
+      "scrollWidth": 375,
+      "width": 375
+    },
+    {
+      "path": "/stress",
+      "charts": 3,
+      "h1": 1,
+      "legends": [
+        79.1953125,
+        79.1953125,
+        79.1953125
+      ],
+      "scrollWidth": 375,
+      "width": 375
+    },
+    {
+      "path": "/momentum",
+      "charts": 0,
+      "h1": 1,
+      "legends": [],
+      "scrollWidth": 375,
+      "width": 375
+    },
+    {
+      "path": "/methodology",
+      "charts": 0,
+      "h1": 1,
+      "legends": [],
+      "scrollWidth": 375,
+      "width": 375
+    },
+    {
+      "path": "/",
+      "charts": 0,
+      "h1": 1,
+      "legends": [],
+      "scrollWidth": 768,
+      "width": 768
+    },
+    {
+      "path": "/market",
+      "charts": 2,
+      "h1": 1,
+      "legends": [
+        88,
+        88
+      ],
+      "scrollWidth": 768,
+      "width": 768
+    },
+    {
+      "path": "/risk-return",
+      "charts": 2,
+      "h1": 1,
+      "legends": [
+        88,
+        88
+      ],
+      "scrollWidth": 768,
+      "width": 768
+    },
+    {
+      "path": "/correlation",
+      "charts": 0,
+      "h1": 1,
+      "legends": [],
+      "scrollWidth": 768,
+      "width": 768
+    },
+    {
+      "path": "/portfolio",
+      "charts": 2,
+      "h1": 1,
+      "legends": [
+        26.3984375,
+        26.3984375
+      ],
+      "scrollWidth": 768,
+      "width": 768
+    },
+    {
+      "path": "/stress",
+      "charts": 3,
+      "h1": 1,
+      "legends": [
+        52.796875,
+        52.796875,
+        52.796875
+      ],
+      "scrollWidth": 768,
+      "width": 768
+    },
+    {
+      "path": "/momentum",
+      "charts": 0,
+      "h1": 1,
+      "legends": [],
+      "scrollWidth": 768,
+      "width": 768
+    },
+    {
+      "path": "/methodology",
+      "charts": 0,
+      "h1": 1,
+      "legends": [],
+      "scrollWidth": 768,
+      "width": 768
+    },
+    {
+      "path": "/",
+      "charts": 0,
+      "h1": 1,
+      "legends": [],
+      "scrollWidth": 1280,
+      "width": 1280
+    },
+    {
+      "path": "/market",
+      "charts": 2,
+      "h1": 1,
+      "legends": [
+        88,
+        79.1953125
+      ],
+      "scrollWidth": 1280,
+      "width": 1280
+    },
+    {
+      "path": "/risk-return",
+      "charts": 2,
+      "h1": 1,
+      "legends": [
+        88,
+        79.1953125
+      ],
+      "scrollWidth": 1280,
+      "width": 1280
+    },
+    {
+      "path": "/correlation",
+      "charts": 0,
+      "h1": 1,
+      "legends": [],
+      "scrollWidth": 1280,
+      "width": 1280
+    },
+    {
+      "path": "/portfolio",
+      "charts": 2,
+      "h1": 1,
+      "legends": [
+        26.3984375,
+        26.3984375
+      ],
+      "scrollWidth": 1280,
+      "width": 1280
+    },
+    {
+      "path": "/stress",
+      "charts": 3,
+      "h1": 1,
+      "legends": [
+        26.3984375,
+        26.3984375,
+        26.3984375
+      ],
+      "scrollWidth": 1280,
+      "width": 1280
+    },
+    {
+      "path": "/momentum",
+      "charts": 0,
+      "h1": 1,
+      "legends": [],
+      "scrollWidth": 1280,
+      "width": 1280
+    },
+    {
+      "path": "/methodology",
+      "charts": 0,
+      "h1": 1,
+      "legends": [],
+      "scrollWidth": 1280,
+      "width": 1280
+    },
+    {
+      "path": "/",
+      "charts": 0,
+      "h1": 1,
+      "legends": [],
+      "scrollWidth": 1440,
+      "width": 1440
+    },
+    {
+      "path": "/market",
+      "charts": 2,
+      "h1": 1,
+      "legends": [
+        79.1953125,
+        79.1953125
+      ],
+      "scrollWidth": 1440,
+      "width": 1440
+    },
+    {
+      "path": "/risk-return",
+      "charts": 2,
+      "h1": 1,
+      "legends": [
+        79.1953125,
+        79.1953125
+      ],
+      "scrollWidth": 1440,
+      "width": 1440
+    },
+    {
+      "path": "/correlation",
+      "charts": 0,
+      "h1": 1,
+      "legends": [],
+      "scrollWidth": 1440,
+      "width": 1440
+    },
+    {
+      "path": "/portfolio",
+      "charts": 2,
+      "h1": 1,
+      "legends": [
+        26.3984375,
+        26.3984375
+      ],
+      "scrollWidth": 1440,
+      "width": 1440
+    },
+    {
+      "path": "/stress",
+      "charts": 3,
+      "h1": 1,
+      "legends": [
+        26.3984375,
+        26.3984375,
+        26.3984375
+      ],
+      "scrollWidth": 1440,
+      "width": 1440
+    },
+    {
+      "path": "/momentum",
+      "charts": 0,
+      "h1": 1,
+      "legends": [],
+      "scrollWidth": 1440,
+      "width": 1440
+    },
+    {
+      "path": "/methodology",
+      "charts": 0,
+      "h1": 1,
+      "legends": [],
+      "scrollWidth": 1440,
+      "width": 1440
+    }
+  ],
+  "document_overflow_failures": 0,
+  "interactions": [
+    "NVDA filters both indexed charts and history rows",
+    "SPY excludes company-only common chart",
+    "Chart source table opens",
+    "Common Sharpe sort puts NVDA first at displayed 1.25",
+    "COVID scenario plus portfolio selection shows -3.73% return and -25.26% drawdown",
+    "TLT correlation selection works via keyboard Enter"
+  ],
+  "console_errors": [],
+  "final_runtime": "Node.js 22.16.0",
+  "checks": {
+    "python_tests": {
+      "passed": 19,
+      "failed": 0,
+      "skipped": 0
+    },
+    "frontend_tests": {
+      "passed": 44,
+      "failed": 0
+    },
+    "lint": "passed",
+    "typescript": "passed",
+    "production_build": "passed",
+    "schema_validation_python": "passed",
+    "schema_validation_frontend": "passed",
+    "production_routes": 8,
+    "snapshot_download": "byte-for-byte match",
+    "unknown_route": "HTTP 404",
+    "notebook": "83 cells / 72 code cells executed without error"
+  }
+}

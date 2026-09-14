@@ -1,0 +1,343 @@
+{
+  "schemaVersion": 3,
+  "generatedAt": "2024-02-01T12:00:00Z",
+  "sections": {
+    "market": {
+      "status": "available",
+      "source": {
+        "path": "web/tests/fixtures/available.json",
+        "label": "Synthetic test fixture \u2014 not investment research",
+        "asOf": "2024-01-31",
+        "period": {
+          "start": "2024-01-01",
+          "end": "2024-01-31"
+        },
+        "methodology": "Presentation test values only. No financial methodology.",
+        "notes": [
+          "Used only by automated tests; never published as dashboard data."
+        ]
+      },
+      "metrics": [
+        {
+          "id": "test-metric",
+          "label": "Test metric",
+          "value": -0.12,
+          "unit": "percent",
+          "note": "Synthetic display test only.",
+          "entityId": "a",
+          "scenarioId": "first"
+        }
+      ],
+      "charts": [
+        {
+          "id": "test-line",
+          "title": "Test line chart",
+          "description": "Synthetic display test only.",
+          "kind": "line",
+          "xLabel": "Observation",
+          "yLabel": "Test value",
+          "xUnit": "text",
+          "unit": "number",
+          "series": [
+            {
+              "id": "test-a",
+              "label": "Test series A",
+              "points": [
+                {
+                  "x": "2024-01-01",
+                  "y": 10
+                },
+                {
+                  "x": "2024-01-02",
+                  "y": null
+                },
+                {
+                  "x": "2024-01-03",
+                  "y": 12
+                }
+              ],
+              "entityId": "a"
+            },
+            {
+              "id": "test-b",
+              "label": "Test series B",
+              "points": [
+                {
+                  "x": "2024-01-01",
+                  "y": 5
+                },
+                {
+                  "x": "2024-01-02",
+                  "y": 6
+                },
+                {
+                  "x": "2024-01-03",
+                  "y": 7
+                }
+              ],
+              "entityId": "b"
+            }
+          ],
+          "scenarioId": "first"
+        },
+        {
+          "id": "test-bar",
+          "title": "Test bar chart",
+          "description": "Synthetic display test only.",
+          "kind": "bar",
+          "xLabel": "Observation",
+          "yLabel": "Test value",
+          "xUnit": "text",
+          "unit": "number",
+          "series": [
+            {
+              "id": "test-a",
+              "label": "Test series A",
+              "points": [
+                {
+                  "x": "2024-01-01",
+                  "y": 10
+                },
+                {
+                  "x": "2024-01-02",
+                  "y": null
+                },
+                {
+                  "x": "2024-01-03",
+                  "y": 12
+                }
+              ],
+              "entityId": "a"
+            },
+            {
+              "id": "test-b",
+              "label": "Test series B",
+              "points": [
+                {
+                  "x": "2024-01-01",
+                  "y": 5
+                },
+                {
+                  "x": "2024-01-02",
+                  "y": 6
+                },
+                {
+                  "x": "2024-01-03",
+                  "y": 7
+                }
+              ],
+              "entityId": "b"
+            }
+          ],
+          "scenarioId": "second"
+        },
+        {
+          "id": "test-scatter",
+          "title": "Test scatter chart",
+          "description": "Synthetic display test only.",
+          "kind": "scatter",
+          "xLabel": "Observation",
+          "yLabel": "Test value",
+          "xUnit": "percent",
+          "unit": "number",
+          "series": [
+            {
+              "id": "test-a",
+              "label": "Test series A",
+              "points": [
+                {
+                  "x": 0.0,
+                  "y": 10
+                },
+                {
+                  "x": 0.1,
+                  "y": null
+                },
+                {
+                  "x": 0.2,
+                  "y": 12
+                }
+              ],
+              "entityId": "a"
+            },
+            {
+              "id": "test-b",
+              "label": "Test series B",
+              "points": [
+                {
+                  "x": 0.0,
+                  "y": 5
+                },
+                {
+                  "x": 0.1,
+                  "y": 6
+                },
+                {
+                  "x": 0.2,
+                  "y": 7
+                }
+              ],
+              "entityId": "b"
+            }
+          ]
+        }
+      ],
+      "tables": [
+        {
+          "id": "test-table",
+          "title": "Test results",
+          "description": "Synthetic display test only.",
+          "columns": [
+            {
+              "key": "label",
+              "label": "Test item",
+              "unit": "text"
+            },
+            {
+              "key": "value",
+              "label": "Test value",
+              "unit": "percent"
+            }
+          ],
+          "rows": [
+            {
+              "id": "a",
+              "cells": [
+                "Test A",
+                0.2
+              ],
+              "entityId": "a"
+            },
+            {
+              "id": "b",
+              "cells": [
+                "Test B",
+                -0.1
+              ],
+              "entityId": "b"
+            },
+            {
+              "id": "c",
+              "cells": [
+                "Missing",
+                null
+              ]
+            }
+          ]
+        }
+      ],
+      "entities": [
+        {
+          "id": "a",
+          "label": "Test asset A"
+        },
+        {
+          "id": "b",
+          "label": "Test asset B"
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "first",
+          "label": "Test window one",
+          "period": {
+            "start": "2024-01-01",
+            "end": "2024-01-10"
+          },
+          "notes": "Synthetic test window."
+        },
+        {
+          "id": "second",
+          "label": "Test window two",
+          "period": {
+            "start": "2024-01-11",
+            "end": "2024-01-31"
+          },
+          "notes": "Synthetic test window."
+        }
+      ]
+    },
+    "risk-return": {
+      "status": "awaiting",
+      "reason": "Risk and return estimates are awaiting a reviewed Python analysis export."
+    },
+    "portfolio": {
+      "status": "awaiting",
+      "reason": "Portfolio weights, performance and risk contributions have not been exported."
+    },
+    "stress": {
+      "status": "awaiting",
+      "reason": "Stress scenarios and their measured outcomes have not been exported."
+    },
+    "momentum": {
+      "status": "awaiting",
+      "reason": "Awaiting results from notebooks/02_momentum_strategy.ipynb. Strategy research is in progress."
+    },
+    "correlation": {
+      "status": "available",
+      "source": {
+        "path": "web/tests/fixtures/available.json",
+        "label": "Synthetic test fixture \u2014 not investment research",
+        "asOf": "2024-01-31",
+        "period": {
+          "start": "2024-01-01",
+          "end": "2024-01-31"
+        },
+        "methodology": "Presentation test values only. No financial methodology.",
+        "notes": [
+          "Used only by automated tests; never published as dashboard data."
+        ]
+      },
+      "metrics": [],
+      "charts": [],
+      "tables": [],
+      "matrices": [
+        {
+          "id": "test-correlation",
+          "title": "Synthetic correlation matrix",
+          "description": "Presentation tests only; no research findings.",
+          "labels": [
+            {
+              "id": "a",
+              "label": "Test A"
+            },
+            {
+              "id": "b",
+              "label": "Test B"
+            },
+            {
+              "id": "c",
+              "label": "Test C"
+            }
+          ],
+          "values": [
+            [
+              1,
+              -0.4,
+              null
+            ],
+            [
+              -0.4,
+              1,
+              0.2
+            ],
+            [
+              null,
+              0.2,
+              1
+            ]
+          ]
+        }
+      ]
+    }
+  },
+  "research": {
+    "updatedAt": null,
+    "period": null,
+    "universe": []
+  },
+  "methodology": {
+    "status": "awaiting",
+    "reason": "The repository methodology document is empty. The assumptions below remain to be verified against the Python research."
+  }
+}

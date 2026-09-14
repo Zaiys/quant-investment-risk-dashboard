@@ -1,0 +1,18 @@
+{
+  "checked_at": "2026-09-12T15:00:17.410299+00:00",
+  "status": "exact agreement",
+  "numeric_values": 27754,
+  "snapshot_sha256": "5ad78f7fa1e2c36871a4d2a4e5daba51c38864881f03d5d399897ce5be1921d1",
+  "notebook_source_sha256": "36058bd703eb073b80b97eff16d653cd2151f1d4aae934a6c82e6d3957a336e6",
+  "momentum_notebook_source_sha256": "0eda770d02a427ebba1e318e160a1bf8bf66f94f84ce741b094e01939f650020",
+  "momentum_robustness_manifest_sha256": "c207974f4848f4acf6efd52c7066913198ec96375ebec39785819dbe969428b9",
+  "sections": {
+    "market": "available",
+    "risk-return": "available",
+    "correlation": "available",
+    "portfolio": "available",
+    "stress": "available",
+    "momentum": "available"
+  },
+  "chart_sampling": "Observed quarter ends plus first/last points and gap boundaries; stress daily. Momentum uses observed month ends plus initial/final dates and annual daily drawdown troughs. No interpolation or financial recomputation."
+}
